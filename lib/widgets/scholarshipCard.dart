@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qh_project/models/scholarship.dart';
 import 'package:qh_project/pages/scholarships_app.dart';
 import '/utils/colors.dart';
 import '/utils/styles.dart';
 import '/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class ScholarshipCard extends StatefulWidget {
   String name, description, eligibility, sid;
@@ -23,7 +25,7 @@ class _ScholarshipCardState extends State<ScholarshipCard> {
     return Container(
       height: 470,
       width: 400,
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(5),
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(
@@ -98,6 +100,10 @@ class _ScholarshipCardState extends State<ScholarshipCard> {
                   ),
                 ),
                 onPressed: () {
+                  if(FirebaseAuth.instance.currentUser == null)
+                    {
+                      GoRouter.of(context).pushNamed('login');
+                    }
                   Navigator.push(
                     context,
                     MaterialPageRoute(

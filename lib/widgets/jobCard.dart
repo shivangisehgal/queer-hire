@@ -29,7 +29,7 @@ class _JobCardState extends State<JobCard> {
     return Container(
       height: 470,
       width: 400,
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(5),
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(

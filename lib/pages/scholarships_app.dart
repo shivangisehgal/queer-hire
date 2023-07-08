@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '/models/scholarship.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ScholarshipApplicationForm extends StatefulWidget {
   late ScholarshipModel scholarship;
@@ -33,8 +32,19 @@ class _ScholarshipApplicationFormState extends State<ScholarshipApplicationForm>
     uid = _prefs.then<String>((SharedPreferences prefs) {
       return Future.value(prefs.getString('uid') != null ? prefs.getString('uid') : '');
     });
+    _fetchUserName();
   }
 
+  void _fetchUserName() async {
+    String currentUserUid = await uid;
+    if (FirebaseAuth.instance.currentUser != null) {
+      String userName = await getUserName(currentUserUid);
+      setState(() {
+        _nameController.text = userName;
+        _emailController.text = FirebaseAuth.instance.currentUser!.email ?? '';
+      });
+    }
+  }
   @override
   void dispose() {
     _nameController.dispose();
@@ -45,7 +55,21 @@ class _ScholarshipApplicationFormState extends State<ScholarshipApplicationForm>
     _coverletterController.dispose();
     super.dispose();
   }
+  Future<String> getUserName(String uid) async {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: uid)
+        .limit(1)
+        .get();
 
+    if (snapshot.size > 0) {
+      final DocumentSnapshot document = snapshot.docs[0];
+      final String userName = document['name'];
+      return userName;
+    } else {
+      return 'null'; // or handle the case when the user with the provided UID does not exist
+    }
+  }
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       ScholarshipApplication scholarshipApplication = ScholarshipApplication(
@@ -105,7 +129,7 @@ class _ScholarshipApplicationFormState extends State<ScholarshipApplicationForm>
   @override
   Widget build(BuildContext context) {
 
-    _emailController.text = FirebaseAuth.instance.currentUser!.email ?? '';
+
 
     return Scaffold(
       appBar: AppBar(

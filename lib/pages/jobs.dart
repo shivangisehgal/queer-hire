@@ -65,39 +65,75 @@ class _JobsPageState extends State<JobsPage> {
                     height: 1.1,
                     fontWeight: FontWeight.w600),
               ),
-              Divider(
-                height: 80,
-              ),
-              StreamBuilder(
-                  stream:
-                      FirebaseFirestore.instance.collection('jobs').snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData) {
-                      return new Text("There is no expense");
-                    }
-                    return GridView.builder(
-                      scrollDirection: Axis.vertical, //important
-                      shrinkWrap: true, //important
-                      //padding: EdgeInsets.fromLTRB(60.0, 40.0, 24.0, 24.0),
-                      itemCount: snapshot.data!.docs.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 60,
-                        crossAxisSpacing: 10,
-                      ),
-                      itemBuilder: (context, index) {
-                        return JobCard(
-                            jobId: snapshot.data!.docs[index]['jobId'],
-                            company: snapshot.data!.docs[index]['companyName'],
-                            description: snapshot.data!.docs[index]
-                                ['description'],
-                            role: snapshot.data!.docs[index]['roleAvailable'],
-                            openings: snapshot.data!.docs[index]['openings']);
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('jobs').snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text("There are no job listings available");
+                  }
+                  return Container(
+                    height: h! * 1.5, // Set the desired height
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: (snapshot.data!.docs.length / 3).ceil(),
+                      itemBuilder: (context, rowIndex) {
+                        int startIndex = rowIndex * 3;
+                        int endIndex = startIndex + 3;
+                        if (endIndex > snapshot.data!.docs.length) {
+                          endIndex = snapshot.data!.docs.length;
+                        }
+                        List<DocumentSnapshot> rowItems =
+                        snapshot.data!.docs.sublist(startIndex, endIndex);
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: rowItems.map((doc) {
+                            return JobCard(
+                              jobId: doc['jobId'],
+                              company: doc['companyName'],
+                              description: doc['description'],
+                              role: doc['roleAvailable'],
+                              openings: doc['openings'],
+                            );
+                          }).toList(),
+                        );
                       },
-                    );
+                    ),
+                  );
+                },
+              )
 
-                  })
+              // StreamBuilder(
+              //     stream:
+              //         FirebaseFirestore.instance.collection('jobs').snapshots(),
+              //     builder: (BuildContext context,
+              //         AsyncSnapshot<QuerySnapshot> snapshot) {
+              //       if (!snapshot.hasData) {
+              //         return new Text("There is no expense");
+              //       }
+              //       return GridView.builder(
+              //         scrollDirection: Axis.vertical, //important
+              //         shrinkWrap: true, //important
+              //         //padding: EdgeInsets.fromLTRB(60.0, 40.0, 24.0, 24.0),
+              //         itemCount: snapshot.data!.docs.length,
+              //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //           crossAxisCount: 3,
+              //           mainAxisSpacing: 60,
+              //           crossAxisSpacing: 15,
+              //         ),
+              //         itemBuilder: (context, index) {
+              //           return JobCard(
+              //               jobId: snapshot.data!.docs[index]['jobId'],
+              //               company: snapshot.data!.docs[index]['companyName'],
+              //               description: snapshot.data!.docs[index]
+              //                   ['description'],
+              //               role: snapshot.data!.docs[index]['roleAvailable'],
+              //               openings: snapshot.data!.docs[index]['openings']);
+              //         },
+              //       );
+              //
+              //     })
               // Divider(
               //   thickness: 2,
               //   height: 140,
@@ -144,7 +180,6 @@ class _JobsPageState extends State<JobsPage> {
     );
   }
 }
-
 
 //return Wrap(
 //   spacing: 50,

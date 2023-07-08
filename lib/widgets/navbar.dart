@@ -102,65 +102,34 @@ class _DesktopNavBarState extends State<DesktopNavBar> {
                                 CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                      snap.data!.docs[0]['name']
+                                    'Hi, ',
+                                    style: TextStyle(
+
+                                    ),
                                   ),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      elevation: MaterialStateProperty.all(0),
-                                      backgroundColor:
-                                      MaterialStateProperty.all(AppColors.primary),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          side: BorderSide(color: AppColors.primary),
-                                          borderRadius: BorderRadius.circular(50),
+                                  Text(
+                                    snap.data!.docs[0]['name'],
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 7,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      GoRouter.of(context).pushNamed('profile');
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 22,
+                                      backgroundColor: AppColors.primary,
+                                      child: Icon(
+                                          Icons.person,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
-                                    onPressed: () async {
-                                      // print(snap.data!);
-                                      // AuthService _auth =
-                                      // AuthService();
-                                      // await _auth.signOut();
-                                      // final SharedPreferences
-                                      // prefs = await _prefs;
-                                      // Future<String> _logout =
-                                      // prefs
-                                      //     .setString(
-                                      //     'uid', '')
-                                      //     .then(
-                                      //         (bool success) {
-                                      //       return 'Log out success';
-                                      //     });
-                                      // print('Log out');
-                                      //GoRouter.of(context).pushNamed('home');
-                                      GoRouter.of(context).pushNamed('profile');
-                                    },
-                                    child: Padding(
-                                      padding:
-                                      const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(
-                                        'Sign Out',
-                                      ),
-                                    ),
-                                  ),
-
-                                  // GestureDetector(
-                                  //   onTap: () {
-                                  //     _openEndDrawer();
-                                  //   },
-                                  //   child: CircleAvatar(
-                                  //     radius: 18.0,
-                                  //     backgroundColor:
-                                  //     Colors.blueAccent,
-                                  //     child: CircleAvatar(
-                                  //       radius: 16.0,
-                                  //       backgroundImage:
-                                  //       NetworkImage(
-                                  //         snap.data.docs[0]['image'],
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             );

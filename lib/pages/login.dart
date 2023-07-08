@@ -103,20 +103,15 @@ class _LoginContainerState extends State<LoginContainer> {
                   letterSpacing: 1.2,
                 ),
               ),
-              SizedBox(height: 15),
-              SizedBox(
-                width: 230,
-                child: GoogleLoginButton(),
-              ),
               SizedBox(height: 20),
               Text(
-                'or use your account',
+                'Enter the details',
                 style: TextStyle(
                   fontSize: 12,
                   letterSpacing: 1.1,
                 ),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 20),
 
               TextFormField(
                 controller: emailController,
@@ -189,14 +184,18 @@ class _LoginContainerState extends State<LoginContainer> {
                   ),
                 ),
                 onPressed: () async {
-                  await _auth.signInWithEmailAndPassword(emailController.text, passwordController.text)
+                  if (_formKey.currentState!.validate()) {
+                    await _auth.signInWithEmailAndPassword(
+                        emailController.text, passwordController.text, context)
                         .then((result) {
-                      GoRouter.of(context).pushNamed('home');
-                      print(result.name);
-                    }).catchError((error) {
-                      print('Registration Error: $error');
+                      print(result);
+                      if (result != null) {
+                        GoRouter.of(context).pushNamed('home');
+                      }
                     });
-                  },
+                  }
+                },
+
                   // setState(() {
                   //   _isRegistering = false;
                   //   _isEditingEmail = false;

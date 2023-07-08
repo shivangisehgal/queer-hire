@@ -8,3 +8,6 @@ const String ribbon2 = 'images/Ribbon-2.png';
 const String image1 = 'images/image1.png';
 const String image2 = 'images/image2.png';
 const String image3 = 'images/image3.png';
+const String jobIcon = 'images/jobs.png';
+const String scholarIcon = 'images/scholarship.png';
+const String trainingIcon = 'images/training.png';

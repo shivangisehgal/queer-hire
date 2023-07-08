@@ -5,8 +5,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/models/user.dart';
+import 'package:flutter/material.dart';
 
-
+void showSnackBar(BuildContext context, String text) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(text),
+    ),
+  );
+}
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,8 +32,11 @@ class AuthService {
 
 
   //sign in email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmailAndPassword(String email, String password, BuildContext context) async {
+
+
     try {
+
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
@@ -34,8 +44,7 @@ class AuthService {
 
       final SharedPreferences prefs = await _prefs;
 
-      Future<String> _uid =
-      prefs.setString('uid', user!.uid).then((bool success) {
+      Future<String> _uid = prefs.setString('uid', user!.uid).then((bool success) {
         return user!.uid;
       });
 
@@ -43,15 +52,15 @@ class AuthService {
 
       return _userFromFirebaseUser(user);
 
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.message!); // Displaying the error message
       return null;
     }
   }
 
   //register with email & password
   Future registerWithEmailAndPassword(
-      String email, String password, String name, bool isRecruiter) async {
+      String email, String password, String name, bool isRecruiter, BuildContext context) async {
     try {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -68,8 +77,12 @@ class AuthService {
 
       return _userFromFirebaseUser(user);
 
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      }
+      showSnackBar(context, e.message!); // Displaying the error message
+      return null;
     }
   }
 

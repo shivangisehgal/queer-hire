@@ -104,20 +104,15 @@ class _LoginContainerState extends State<LoginContainer> {
                   letterSpacing: 1.2,
                 ),
               ),
-              SizedBox(height: 15),
-              SizedBox(
-                width: 230,
-                child: GoogleSignUpButton(),
-              ),
               SizedBox(height: 20),
               Text(
-                'or use your e-mail',
+                'Enter the details',
                 style: TextStyle(
                   fontSize: 12,
                   letterSpacing: 1.1,
                 ),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 20),
               TextFormField(
                 controller: nameController,
                 validator: (value) {
@@ -152,7 +147,7 @@ class _LoginContainerState extends State<LoginContainer> {
                   }
                   else
                   {
-                    return "Check your email";
+                    return "Enter a valid email";
                   }
                 },
                 decoration: InputDecoration(
@@ -173,6 +168,7 @@ class _LoginContainerState extends State<LoginContainer> {
               SizedBox(height: 10),
               TextFormField(
                 controller: passwordController,
+                obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
@@ -225,13 +221,18 @@ class _LoginContainerState extends State<LoginContainer> {
                   ),
                 ),
                 onPressed: () async {
-                  await _auth.registerWithEmailAndPassword(emailController.text, passwordController.text, nameController.text, this.value)
-                      .then((result) {
-                    GoRouter.of(context).pushNamed('home');
-                    print(result);
-                  }).catchError((error) {
-                    print('Registration Error: $error');
-                  });
+    if (_formKey.currentState!.validate()) {
+      await _auth.registerWithEmailAndPassword(
+          emailController.text, passwordController.text,
+          nameController.text, this.value, context)
+          .then((result) {
+        print(result);
+        if(result != null)
+        {
+          GoRouter.of(context).pushNamed('home');
+        }
+      });
+    }
                 },
                 child: Padding(
                   padding:

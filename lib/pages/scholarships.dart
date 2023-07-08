@@ -64,39 +64,47 @@ class _ScholarshipsPageState extends State<ScholarshipsPage> {
                     color: Colors.grey[700],
                     fontSize: w! / 30, height: 1.1, fontWeight: FontWeight.w600),
               ),
-              Divider(
-                height: 80,
+              Center(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('scholarships').snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Text("There are no scholarships available");
+                    }
+                    return Container(
+                      height: h! * 1.5, // Set the desired height
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: (snapshot.data!.docs.length / 3).ceil(),
+                        itemBuilder: (context, rowIndex) {
+                          int startIndex = rowIndex * 3;
+                          int endIndex = startIndex + 3;
+                          if (endIndex > snapshot.data!.docs.length) {
+                            endIndex = snapshot.data!.docs.length;
+                          }
+                          List<DocumentSnapshot> rowItems =
+                          snapshot.data!.docs.sublist(startIndex, endIndex);
+                          return Row(
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: rowItems.map((doc) {
+                              return ScholarshipCard(
+                                sid: doc['sid'],
+                                name: doc['name'],
+                                description: doc['description'],
+                                eligibility: doc['eligibility'],
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
 
-              StreamBuilder(
-                  stream:
-                  FirebaseFirestore.instance.collection('scholarships').snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData) {
-                      return new Text("There is no expense");
-                    }
-                    return GridView.builder(
-                      scrollDirection: Axis.vertical, //important
-                      shrinkWrap: true, //important
-                      //padding: EdgeInsets.fromLTRB(60.0, 40.0, 24.0, 24.0),
-                      itemCount: snapshot.data!.docs.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 60,
-                        crossAxisSpacing: 10,
-                      ),
-                      itemBuilder: (context, index) {
-                        return ScholarshipCard(
-                            sid: snapshot.data!.docs[index]['sid'],
-                            name: snapshot.data!.docs[index]['name'],
-                            description: snapshot.data!.docs[index]['description'],
-                            eligibility: snapshot.data!.docs[index]['eligibility'],
-                        );
-                      },
-                    );
-
-                  }),
               Divider(
                 thickness: 2,
                 height: 140,

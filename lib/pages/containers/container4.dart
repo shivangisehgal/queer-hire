@@ -3,6 +3,8 @@ import '/utils/colors.dart';
 import '/utils/styles.dart';
 import '/utils/constants.dart';
 import '/widgets/jobCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Container4 extends StatefulWidget {
   const Container4({Key? key}) : super(key: key);
@@ -12,6 +14,18 @@ class Container4 extends StatefulWidget {
 }
 
 class _Container4State extends State<Container4> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,34 +54,29 @@ class _Container4State extends State<Container4> {
                   fontSize: w! / 30, height: 1.1, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 50),
-            Row(
-              //crossAxisAlignment: WrapCrossAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                JobCard(
-                  jobId: '1',
-                    company: 'KPMG',
-                    description:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-                    role: 'Junior Consultant',
-                    openings: 7),
-                JobCard(
-                    jobId: '1',
-                    company: 'Apple',
-                    description:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-                    role: 'Junior Consultant',
-                    openings: 7),
-                JobCard(
-                    jobId: '1',
-                    company: 'CosRX',
-                    description:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-                    role: 'Junior Consultant',
-                    openings: 7),
-              ],
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('jobs').limit(3).snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Text("There are no job listings available");
+                }
+                List<DocumentSnapshot> jobListings = snapshot.data!.docs;
+                return Row(
+                  children: jobListings.map((doc) {
+                    return Expanded(
+                      child: JobCard(
+                        jobId: doc['jobId'],
+                        company: doc['companyName'],
+                        description: doc['description'],
+                        role: doc['roleAvailable'],
+                        openings: doc['openings'],
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
             ),
-            //SizedBox(height: 30),
+            SizedBox(height: 30),
           ],
         ));
   }

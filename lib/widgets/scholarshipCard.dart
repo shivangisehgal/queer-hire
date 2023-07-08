@@ -21,8 +21,9 @@ class _ScholarshipCardState extends State<ScholarshipCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 450,
-      width: 350,
+      height: 470,
+      width: 400,
+      padding: EdgeInsets.all(10),
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(
@@ -46,8 +47,9 @@ class _ScholarshipCardState extends State<ScholarshipCard> {
                     child: Center(
                       child: Text(
                         this.widget.name,
+                        textAlign: TextAlign.center,
                         style:
-                        TextStyle(fontSize: w! / 40, color: Colors.white),
+                        TextStyle(fontSize: w! / 50, color: Colors.white),
                       ),
                     ),
                   ),

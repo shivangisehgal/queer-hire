@@ -39,11 +39,11 @@ class Container2 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CustomCard(title: 'Jobs & Intenships'),
+            CustomCard(title: 'Jobs & Intenships', image: jobIcon),
             SizedBox(width: 10),
-            CustomCard(title: 'Scholarships'),
+            CustomCard(title: 'Scholarships', image: scholarIcon),
             SizedBox(width: 10),
-            CustomCard(title: 'Trainings'),
+            CustomCard(title: 'Trainings', image: trainingIcon),
           ],
         ),
       ),
@@ -52,8 +52,9 @@ class Container2 extends StatelessWidget {
 }
 
 class CustomCard extends StatelessWidget {
-  CustomCard({required this.title});
+  CustomCard({required this.title, required this.image});
   String title;
+  String image;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -69,8 +70,15 @@ class CustomCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
+              radius: 40,
               backgroundColor: AppColors.primary,
-              radius: 35,
+              child: CircleAvatar(
+                backgroundColor: AppColors.primary,
+                radius: 35,
+                backgroundImage: AssetImage(
+                    image,
+                ),
+              ),
             ),
             SizedBox(height: 20,),
             Text(title,

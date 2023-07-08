@@ -27,8 +27,9 @@ class _JobCardState extends State<JobCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 450,
-      width: 300,
+      height: 470,
+      width: 400,
+      padding: EdgeInsets.all(10),
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(

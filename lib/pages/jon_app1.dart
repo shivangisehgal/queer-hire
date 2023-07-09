@@ -200,319 +200,316 @@ class _ScholarshipApplicationFormState
             ),
           ),
           child: Center(
-            child: Container(
-              // padding: EdgeInsets.only(top: h! * 0.2),
-              child: SingleChildScrollView(
-                child: Center(
-                  child: Card(
-                    elevation: 15,
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      width: w! * 0.5,
-                      height: 700,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Apply For ',
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  widget.scholarship.name,
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // Text(
-                            //   'Your ID: ${FirebaseAuth.instance.currentUser!.uid}',
-                            //   style: TextStyle(
-                            //       fontSize: 18, fontWeight: FontWeight.bold),
-                            // ),
-                            SizedBox(height: 16),
-                            TextFormField(
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                hintText: 'Name',
-                                filled: true,
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 8.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
+            child: SingleChildScrollView(
+              child: Center(
+                child: Card(
+                  elevation: 15,
+                  child: Container(
+                    padding: EdgeInsets.all(15),
+                    width: w! * 0.5,
+                    height: 700,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Apply For ',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                            ),
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                hintText: 'Email',
-                                filled: true,
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 8.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
+                              Text(
+                                widget.scholarship.name,
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
                                 ),
                               ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your email';
-                                }
-                                return null;
-                              },
-                            ),
-                            TextFormField(
-                              controller: _ageController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                hintText: 'Age',
-                                filled: true,
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 8.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                            ],
+                          ),
+                          // Text(
+                          //   'Your ID: ${FirebaseAuth.instance.currentUser!.uid}',
+                          //   style: TextStyle(
+                          //       fontSize: 18, fontWeight: FontWeight.bold),
+                          // ),
+                          SizedBox(height: 16),
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              hintText: 'Name',
+                              filled: true,
+                              contentPadding: const EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your age';
-                                }
-                                return null;
-                              },
-                            ),
-                            TextFormField(
-                              controller: _contactController,
-                              decoration: InputDecoration(
-                                hintText: 'Contact: +91',
-                                filled: true,
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 8.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              validator: (value) {
-                                if (value!.length != 10 || value!.isEmpty) {
-                                  return 'Please enter valid contact';
-                                }
-                                return null;
-                              },
                             ),
-                            TextFormField(
-                              controller: _genderController,
-                              decoration: InputDecoration(
-                                hintText: 'Gender',
-                                filled: true,
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 8.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              hintText: 'Email',
+                              filled: true,
+                              contentPadding: const EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your gender';
-                                }
-                                return null;
-                              },
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: _ageController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              hintText: 'Age',
+                              filled: true,
+                              contentPadding: const EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your age';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: _contactController,
+                            decoration: InputDecoration(
+                              hintText: 'Contact: +91',
+                              filled: true,
+                              contentPadding: const EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value!.length != 10 || value!.isEmpty) {
+                                return 'Please enter valid contact';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: _genderController,
+                            decoration: InputDecoration(
+                              hintText: 'Gender',
+                              filled: true,
+                              contentPadding: const EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your gender';
+                              }
+                              return null;
+                            },
+                          ),
 
-                            Row(
-                              children: [
+                          Row(
+                            children: [
 
-                                Expanded(
-                                  flex: 4,
-                                  child: ElevatedButton(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10.0, top: 10.0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(coverLetterName,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.grey.shade700
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    onPressed: (){},
-                                    style: ButtonStyle(
-                                      elevation: MaterialStateProperty.all(0),
-                                      backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          side: BorderSide(color: Colors.grey.shade100),
-                                          borderRadius: BorderRadius.circular(10),
+                              Expanded(
+                                flex: 4,
+                                child: ElevatedButton(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10.0, top: 10.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(coverLetterName,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.grey.shade700
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                ElevatedButton(
+                                  onPressed: (){},
                                   style: ButtonStyle(
                                     elevation: MaterialStateProperty.all(0),
-                                    backgroundColor:
-                                    MaterialStateProperty.all(AppColors.primary),
+                                    backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
                                     shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
-                                        side: BorderSide(color: AppColors.primary),
-                                        borderRadius: BorderRadius.circular(50),
+                                        side: BorderSide(color: Colors.grey.shade100),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
                                   ),
-                                  onPressed: getFile,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 4),
-                                    child: Text(
-                                      'Upload',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700, fontSize: 18),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  elevation: MaterialStateProperty.all(0),
+                                  backgroundColor:
+                                  MaterialStateProperty.all(AppColors.primary),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      side: BorderSide(color: AppColors.primary),
+                                      borderRadius: BorderRadius.circular(50),
                                     ),
                                   ),
                                 ),
-
-                              ],
-                            ),
-
-                            // TextFormField(
-                            //   controller: _coverletterController,
-                            //   //keyboardType: TextInputType.number,
-                            //   decoration: InputDecoration(
-                            //     hintText: 'Cover Letter',
-                            //     filled: true,
-                            //     contentPadding: const EdgeInsets.only(
-                            //         left: 14.0, bottom: 8.0, top: 8.0),
-                            //     focusedBorder: OutlineInputBorder(
-                            //       borderSide:
-                            //           BorderSide(color: Colors.grey.shade100),
-                            //       borderRadius: BorderRadius.circular(10),
-                            //     ),
-                            //     enabledBorder: OutlineInputBorder(
-                            //       borderSide:
-                            //           BorderSide(color: Colors.grey.shade100),
-                            //       borderRadius: BorderRadius.circular(10),
-                            //     ),
-                            //   ),
-                            //   validator: (value) {
-                            //     if (value!.isEmpty) {
-                            //       return 'Please enter your years of experience';
-                            //     }
-                            //     return null;
-                            //   },
-                            // ),
-
-                            // ElevatedButton(
-                            //   style: ButtonStyle(
-                            //     elevation: MaterialStateProperty.all(0),
-                            //     backgroundColor:
-                            //         MaterialStateProperty.all(AppColors.primary),
-                            //     shape: MaterialStateProperty.all(
-                            //       RoundedRectangleBorder(
-                            //         side: BorderSide(color: AppColors.primary),
-                            //         borderRadius: BorderRadius.circular(50),
-                            //       ),
-                            //     ),
-                            //   ),
-                            //   onPressed: getFile,
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         horizontal: 15.0, vertical: 5),
-                            //     child: Text(
-                            //       'Apply',
-                            //       style: TextStyle(
-                            //           fontWeight: FontWeight.w700, fontSize: 18),
-                            //     ),
-                            //   ),
-                            // ),
-
-                            SizedBox(height: 16),
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(0),
-                                backgroundColor:
-                                MaterialStateProperty.all(AppColors.primary),
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    side: BorderSide(color: AppColors.primary),
-                                    borderRadius: BorderRadius.circular(50),
+                                onPressed: getFile,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 4),
+                                  child: Text(
+                                    'Upload',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700, fontSize: 18),
                                   ),
                                 ),
                               ),
-                              onPressed: () {
-                                _submitForm();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15.0, vertical: 5),
-                                child: Text(
-                                  'Apply',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700, fontSize: 18),
+
+                            ],
+                          ),
+
+                          // TextFormField(
+                          //   controller: _coverletterController,
+                          //   //keyboardType: TextInputType.number,
+                          //   decoration: InputDecoration(
+                          //     hintText: 'Cover Letter',
+                          //     filled: true,
+                          //     contentPadding: const EdgeInsets.only(
+                          //         left: 14.0, bottom: 8.0, top: 8.0),
+                          //     focusedBorder: OutlineInputBorder(
+                          //       borderSide:
+                          //           BorderSide(color: Colors.grey.shade100),
+                          //       borderRadius: BorderRadius.circular(10),
+                          //     ),
+                          //     enabledBorder: OutlineInputBorder(
+                          //       borderSide:
+                          //           BorderSide(color: Colors.grey.shade100),
+                          //       borderRadius: BorderRadius.circular(10),
+                          //     ),
+                          //   ),
+                          //   validator: (value) {
+                          //     if (value!.isEmpty) {
+                          //       return 'Please enter your years of experience';
+                          //     }
+                          //     return null;
+                          //   },
+                          // ),
+
+                          // ElevatedButton(
+                          //   style: ButtonStyle(
+                          //     elevation: MaterialStateProperty.all(0),
+                          //     backgroundColor:
+                          //         MaterialStateProperty.all(AppColors.primary),
+                          //     shape: MaterialStateProperty.all(
+                          //       RoundedRectangleBorder(
+                          //         side: BorderSide(color: AppColors.primary),
+                          //         borderRadius: BorderRadius.circular(50),
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   onPressed: getFile,
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         horizontal: 15.0, vertical: 5),
+                          //     child: Text(
+                          //       'Apply',
+                          //       style: TextStyle(
+                          //           fontWeight: FontWeight.w700, fontSize: 18),
+                          //     ),
+                          //   ),
+                          // ),
+
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(0),
+                              backgroundColor:
+                              MaterialStateProperty.all(AppColors.primary),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  side: BorderSide(color: AppColors.primary),
+                                  borderRadius: BorderRadius.circular(50),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                            onPressed: () {
+                              _submitForm();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 5),
+                              child: Text(
+                                'Apply',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

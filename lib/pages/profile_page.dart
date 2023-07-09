@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/models/job.dart';
 import '/models/scholarship.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -36,33 +38,33 @@ class _ProfilePageState extends State<ProfilePage> {
     w = MediaQuery.of(context).size.width;
     h = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            //padding: EdgeInsets.only(top: h! * 0.2),
-            child: Center(
-              child: Card(
-                elevation: 15,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Container(
-                  width: w! * 0.7,
-                  height: 700,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: [
-                      // Expanded(
-                      //   child: ProfileSide(),
-                      // ),
-                      Expanded(
-                        flex: 2,
-                        child: MyApplications(),
-                      ),
-                    ],
-                  ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            end: Alignment.topLeft,
+            begin: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFDF7C3).withOpacity(0.75),
+              Color(0xFFFFDEB4).withOpacity(0.75),
+              Color(0XFFFFB4B4).withOpacity(0.75),
+              Color(0xFFB2A4FF).withOpacity(0.75),
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              //padding: EdgeInsets.only(top: h! * 0.2),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ProfileCard(),
+                    MyJobApplications(),
+                    MyScholarshipApplications(),
+                  ],
                 ),
               ),
             ),
@@ -73,15 +75,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class ProfileSide extends StatefulWidget {
-  const ProfileSide({Key? key}) : super(key: key);
+class ProfileCard extends StatefulWidget {
+  const ProfileCard({Key? key}) : super(key: key);
 
   @override
-  State<ProfileSide> createState() => _ProfileSideState();
+  State<ProfileCard> createState() => _ProfileCardState();
 }
 
-class _ProfileSideState extends State<ProfileSide> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+class _ProfileCardState extends State<ProfileCard> {
+
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<String> uid;
 
@@ -96,98 +98,97 @@ class _ProfileSideState extends State<ProfileSide> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15.0), bottomLeft: Radius.circular(15.0)),
-        color: Colors.white,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 18.0, right: 18.0, bottom: 18.0, top: 25),
-        child: FutureBuilder<String>(
-          future: uid,
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Container();
-              default:
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return snapshot.data != ''
-                      ? StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .where('id', isEqualTo: snapshot.data)
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snap) {
-                            if (!snap.hasData) {
-                              return Container();
-                            }
-
-                            return Column(
-                              //crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return FutureBuilder<String>(
+        future: uid,
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot)
+    {
+      switch (snapshot.connectionState) {
+        case ConnectionState.waiting:
+          return Container();
+        default:
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return snapshot.data != ''
+                ? StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .where('id', isEqualTo: snapshot.data)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snap) {
+                  if (!snap.hasData) {
+                    return Container();
+                  }
+                  return Stack(
+                    alignment: Alignment.topCenter,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 100 / 2.0),
+                        child: Container(
+                          //replace this Container with your Card
+                          height: 300.0,
+                          width: 350.0,
+                          child: Card(
+                            elevation: 15,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            color: Colors.white,
+                            child: Column(
                               children: [
-                                Column(
-                                  children: [
-                                    SizedBox(height: 15),
-                                    // CircleAvatar(
-                                    //   radius: 70,
-                                    //   child: Image.network(
-                                    //       'assets/images/profile-pride.png'),
-                                    // ),
-                                    SizedBox(height: 45),
-                                    Text(
-                                      "Hello,",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        letterSpacing: 1.1,
-                                      ),
-                                    ),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      snap.data!.docs[0]['name'].toUpperCase(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        height: 1.2,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 42,
-                                        letterSpacing: 1.2,
-                                      ),
-                                    ),
-                                    Text(
-                                      snap.data!.docs[0]['email'],
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        letterSpacing: 1.1,
-                                        //color:
-                                      ),
-                                    ),
-                                  ],
+                                SizedBox(
+                                  height: 50,
                                 ),
-                                SizedBox(height: 30),
+
                                 Container(
-                                  width: double.infinity,
-                                  height: 60.0,
+                                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                        border: Border.all(
+                                          color: AppColors.primary,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(50))
+                                    ),
+
+                                    child: Text(
+                                      snap.data!.docs[0]['name'].toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  snap.data!.docs[0]['email'].toLowerCase(),
+                                ),
+                                SizedBox(
+                                  height: 100,
+                                ),
+                                Container(
+                                  width: 250,
+                                  height: 45.0,
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                       elevation: MaterialStateProperty.all(0),
                                       backgroundColor:
-                                          MaterialStateProperty.all(
-                                              AppColors.primary),
+                                      MaterialStateProperty.all(
+                                          AppColors.primary),
                                       shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
                                           side: BorderSide(
                                               color: AppColors.primary),
                                           borderRadius:
-                                              BorderRadius.circular(50),
+                                          BorderRadius.circular(50),
                                         ),
                                       ),
                                     ),
                                     onPressed: () async {
-                                      print(snap.data!);
+                                      //print(snap.data!);
                                       AuthService _auth =
                                       AuthService();
                                       await _auth.signOut();
@@ -216,117 +217,475 @@ class _ProfileSideState extends State<ProfileSide> {
                                     ),
                                   ),
                                 )
+
                               ],
-                            );
-                          })
-                      : Text('No data');
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration:
+                        ShapeDecoration(
+                            shape: CircleBorder(), color: Colors.white),
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: DecoratedBox(
+                            decoration: ShapeDecoration(
+                                shape: CircleBorder(),
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      'https://upload.wikimedia.org/wikipedia/commons/a/a0/Bill_Gates_2018.jpg',
+                                    ))),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
                 }
-            }
-          },
+            )
+                : Text('No data');
+          }
+      }
+    }
+    );
+  }
+}
+
+class MyJobApplications extends StatefulWidget {
+  const MyJobApplications({Key? key}) : super(key: key);
+
+  @override
+  State<MyJobApplications> createState() => _MyJobApplicationsState();
+}
+
+class _MyJobApplicationsState extends State<MyJobApplications> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+  //late Stream<List<JobModel>> jobAppStream;
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
+  Stream<List<JobModel>> _getjobAppStream(Future<String> uidFuture) async* {
+    String uid = await uidFuture;
+    Stream<QuerySnapshot> applicationsSnapshot = FirebaseFirestore.instance
+        .collection('applications')
+        .where('uid', isEqualTo: uid)
+        .snapshots();
+
+    await for (QuerySnapshot snapshot in applicationsSnapshot) {
+      List<JobModel> jobs = [];
+      for (DocumentSnapshot applicationSnapshot in snapshot.docs) {
+        String? jobId =
+        (applicationSnapshot.data() as Map<String, dynamic>)['jobId'];
+        print(jobId);
+
+        QuerySnapshot jobSnapshot = await FirebaseFirestore.instance
+            .collection('jobs')
+            .where('jobId', isEqualTo: jobId)
+            .get();
+
+        if (jobSnapshot.docs[0].exists) {
+          JobModel job = JobModel.fromSnapshot(jobSnapshot.docs[0]);
+          print('printing jobid');
+          print(job.jobId);
+          jobs.add(job);
+        } else {
+          print('job snapshot doesnt exist');
+        }
+      }
+
+      yield jobs;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 100 / 2.0),
+      child: Container(
+        //replace this Container with your Card
+        height: 500.0,
+        width: 350.0,
+        child: Card(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              //crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      border: Border.all(
+                        color: AppColors.primary,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                  ),
+
+                  child: Center(
+                    child: Text(
+                      'My Job Applications',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 22,
+                      ),
+                    ),
+                  ),
+                ),
+
+                FutureBuilder<String>(
+                  future: uid,
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Container();
+                      default:
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return snapshot.data != ''
+                              ? StreamBuilder<List<JobModel>>(
+                              stream: _getjobAppStream(uid),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<JobModel>> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
+
+                                List<JobModel> jobs = snapshot.data ?? [];
+
+                                if (jobs.isEmpty) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                          children: [
+                                            Text(
+                                              'You haven\'t applied for any jobs yet :)',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.grey.shade700
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            ElevatedButton(
+                                              style: ButtonStyle(
+                                                elevation: MaterialStateProperty.all(0),
+                                                backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    AppColors.primary),
+                                                shape: MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                    side: BorderSide(
+                                                        color: AppColors.primary),
+                                                    borderRadius: BorderRadius.circular(50),
+                                                  ),
+                                                ),
+                                              ),
+                                              onPressed: (){},
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 10.0, vertical: 4),
+                                                child: Text(
+                                                  'Apply',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 18),
+                                                ),
+                                              ),
+                                            ),
+                                          ]
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: jobs.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      JobModel job = jobs[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                        child: Card(
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5),
+                                            // side: BorderSide(
+                                            //   color: AppColors.primary,
+                                            // ),
+                                          ),
+                                          child: ListTile(
+                                            title: Text(job.companyName),
+                                            subtitle: Text(
+                                                job.roleAvailable,
+                                              style: TextStyle(
+                                                color: AppColors.primary
+                                              ),
+                                            ),
+                                            // Display other job details here
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              })
+
+                              : Text('No data');
+                        }
+                    }
+                  },
+                ),
+
+              ],
+            ),
+          ),
         ),
+      ),
+    );
+  }
+}
 
-        //   SizedBox(height: 15),
-        //   // SizedBox(
-        //   //   width: 230,
-        //   //   child: GoogleLoginButton(),
-        //   // ),
-        //   // SizedBox(height: 20),
+class MyScholarshipApplications extends StatefulWidget {
+  const MyScholarshipApplications({Key? key}) : super(key: key);
 
-        //   // SizedBox(height: 5),
-        //   // TextFormField(
-        //   //   controller: emailController,
-        //   //   validator: (value) {
-        //   //     if (value == null || value.isEmpty) {
-        //   //       return 'Please enter your email';
-        //   //     }
-        //   //     return null;
-        //   //   },
-        //   //   decoration: InputDecoration(
-        //   //     hintText: 'Email',
-        //   //     filled: true,
-        //   //     contentPadding:
-        //   //         const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-        //   //     focusedBorder: OutlineInputBorder(
-        //   //       borderSide: BorderSide(color: Colors.grey.shade100),
-        //   //       borderRadius: BorderRadius.circular(10),
-        //   //     ),
-        //   //     enabledBorder: OutlineInputBorder(
-        //   //       borderSide: BorderSide(color: Colors.grey.shade100),
-        //   //       borderRadius: BorderRadius.circular(10),
-        //   //     ),
-        //   //   ),
-        //   // ),
-        //   // SizedBox(height: 10),
-        //   // TextFormField(
-        //   //   controller: passwordController,
-        //   //   obscureText: true,
-        //   //   validator: (value) {
-        //   //     if (value == null || value.isEmpty) {
-        //   //       return 'Please enter your password';
-        //   //     }
-        //   //     return null;
-        //   //   },
-        //   //   decoration: InputDecoration(
-        //   //     hintText: 'Password',
-        //   //     filled: true,
-        //   //     contentPadding:
-        //   //         const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-        //   //     focusedBorder: OutlineInputBorder(
-        //   //       borderSide: BorderSide(color: Colors.grey.shade100),
-        //   //       borderRadius: BorderRadius.circular(10),
-        //   //     ),
-        //   //     enabledBorder: OutlineInputBorder(
-        //   //       borderSide: BorderSide(color: Colors.grey.shade100),
-        //   //       borderRadius: BorderRadius.circular(10),
-        //   //     ),
-        //   //   ),
-        //   // ),
-        //   // SizedBox(height: 20),
-        //   // Text(
-        //   //   'Forgot Password?',
-        //   //   style: TextStyle(
-        //   //     letterSpacing: 1.1,
-        //   //     fontSize: 12,
-        //   //   ),
-        //   // ),
-        //   // SizedBox(height: 5),
-        //   // ElevatedButton(
-        //   //   style: ButtonStyle(
-        //   //     elevation: MaterialStateProperty.all(0),
-        //   //     backgroundColor: MaterialStateProperty.all(AppColors.primary),
-        //   //     shape: MaterialStateProperty.all(
-        //   //       RoundedRectangleBorder(
-        //   //         side: BorderSide(color: AppColors.primary),
-        //   //         borderRadius: BorderRadius.circular(50),
-        //   //       ),
-        //   //     ),
-        //   //   ),
-        //   //   onPressed: () async {
-        //   //     await _auth
-        //   //         .signInWithEmailAndPassword(
-        //   //             emailController.text, passwordController.text)
-        //   //         .then((result) {
-        //   //       GoRouter.of(context).pushNamed('home');
-        //   //       print(result.name);
-        //   //     }).catchError((error) {
-        //   //       print('Registration Error: $error');
-        //   //     });
-        //   //   },
-        //   //   // setState(() {
-        //   //   //   _isRegistering = false;
-        //   //   //   _isEditingEmail = false;
-        //   //   // });
-        //   //   child: Padding(
-        //   //     padding:
-        //   //         const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-        //   //     child: Text(
-        //   //       'Log in',
-        //   //       style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-        //   //     ),
-        //   //   ),
-        //   //),
-        // ],
-        //),
+  @override
+  State<MyScholarshipApplications> createState() => _MyScholarshipApplicationsState();
+}
+
+class _MyScholarshipApplicationsState extends State<MyScholarshipApplications> {
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+  //late Stream<List<JobModel>> jobAppStream;
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
+  Stream<List<ScholarshipModel>> _getScholarshipAppStream(
+      Future<String> uidFuture) async* {
+    String uid = await uidFuture;
+    Stream<QuerySnapshot> scholarAppsSnapshot = FirebaseFirestore.instance
+        .collection('scholarshipapply')
+        .where('uid', isEqualTo: uid)
+        .snapshots();
+
+    await for (QuerySnapshot snapshot in scholarAppsSnapshot) {
+      List<ScholarshipModel> scholarships = [];
+      for (DocumentSnapshot scholarAppsSnapshot in snapshot.docs) {
+        String? sid =
+        (scholarAppsSnapshot.data() as Map<String, dynamic>)['sid'];
+        print(sid);
+
+        QuerySnapshot scholarshipSnapshot = await FirebaseFirestore.instance
+            .collection('scholarships')
+            .where('sid', isEqualTo: sid)
+            .get();
+
+        if (scholarshipSnapshot.docs[0].exists) {
+          ScholarshipModel scholarship =
+          ScholarshipModel.fromSnapshot(scholarshipSnapshot.docs[0]);
+          print('printing sid');
+          print(scholarship.sid);
+          scholarships.add(scholarship);
+        } else {
+          print('scholarship snapshot doesn\'t exist');
+        }
+      }
+
+      yield scholarships;
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 100 / 2.0),
+      child: Container(
+        //replace this Container with your Card
+        height: 500.0,
+        width: 350.0,
+        child: Card(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      border: Border.all(
+                        color: AppColors.primary,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                  ),
+
+                  child: Center(
+                    child: Text(
+                      'My Scholarship Applications',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 22,
+                      ),
+                    ),
+                  ),
+                ),
+
+                FutureBuilder<String>(
+                  future: uid,
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Container();
+                      default:
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return snapshot.data != ''
+                              ? StreamBuilder<List<ScholarshipModel>>(
+                              stream: _getScholarshipAppStream(uid),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<ScholarshipModel>>
+                                  snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
+
+                                List<ScholarshipModel> scholarships =
+                                    snapshot.data ?? [];
+
+                                if (scholarships.isEmpty) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'You haven\'t applied to any scholarships yet :)',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.grey.shade700
+                                          ),
+                                        ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              elevation: MaterialStateProperty.all(0),
+                                              backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  AppColors.primary),
+                                              shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                      color: AppColors.primary),
+                                                  borderRadius: BorderRadius.circular(50),
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: (){},
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10.0, vertical: 4),
+                                              child: Text(
+                                                'Apply',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 18),
+                                              ),
+                                            ),
+                                          ),
+                                      ]
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: scholarships.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    ScholarshipModel scholarship =
+                                    scholarships[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                      child: Card(
+                                        elevation: 2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(5),
+                                          // side: BorderSide(
+                                          //   color: AppColors.primary,
+                                          // ),
+                                        ),
+                                        child: ListTile(
+                                          title: Text(scholarship.name),
+                                          //subtitle: Text(job.roleAvailable),
+                                          // Display other job details here
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              })
+                              : Text('No data');
+                        }
+                    }
+                  },
+                ),
+
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -416,7 +775,7 @@ class _MyApplicationsState extends State<MyApplications> {
           print(scholarship.sid);
           scholarships.add(scholarship);
         } else {
-          print('scholarship snapshot doesnt exist');
+          print('scholarship snapshot doesn\'t exist');
         }
       }
 
@@ -444,9 +803,41 @@ class _MyApplicationsState extends State<MyApplications> {
       ),
       child: Container(
         child: Column(
+
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 300 / 2.0),
+                  child: Container(
+                    //replace this Container with your Card
+                    color: Colors.black,
+                    height: 200.0,
+                  ),
+                ),
+                Container(
+                  width: 300,
+                  height: 300,
+                  decoration:
+                  ShapeDecoration(shape: CircleBorder(), color: Colors.white),
+                  child: Padding(
+                    padding: EdgeInsets.all(120),
+                    child: DecoratedBox(
+                      decoration: ShapeDecoration(
+                          shape: CircleBorder(),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                'https://upload.wikimedia.org/wikipedia/commons/a/a0/Bill_Gates_2018.jpg',
+                              ))),
+                    ),
+                  ),
+                )
+              ],
+            ),
             SizedBox(height: 30),
             FutureBuilder<String>(
               future: uid,

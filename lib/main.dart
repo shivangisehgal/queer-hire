@@ -23,7 +23,9 @@ void main() async {
           apiKey: "AIzaSyDAWmzjonYLjwelFPcAlpAjqHSNxS8gEXI",
           appId: "1:612916349107:web:35692b75c7160d50bec8c6",
           messagingSenderId: "612916349107",
-          projectId: "queerhire"));
+          projectId: "queerhire",
+          storageBucket: "queerhire.appspot.com"
+      ));
   runApp(const MyApp());
 }
 

@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '/models/job.dart';
+import '/models/scholarship.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '/utils/constants.dart';
 import '/utils/colors.dart';
 import 'dart:io';
@@ -16,18 +15,18 @@ import 'package:flutter/material.dart';
 
 import 'dart:typed_data';
 
-class JobApplicationForm extends StatefulWidget {
-  late JobModel job;
+class ScholarshipApplicationForm extends StatefulWidget {
+  late ScholarshipModel scholarship;
   static String uid = '';
-  JobApplicationForm({required this.job});
-
-  //final String? jobId;
+  ScholarshipApplicationForm({required this.scholarship});
 
   @override
-  _JobApplicationFormState createState() => _JobApplicationFormState();
+  _ScholarshipApplicationFormState createState() =>
+      _ScholarshipApplicationFormState();
 }
 
-class _JobApplicationFormState extends State<JobApplicationForm> {
+class _ScholarshipApplicationFormState
+    extends State<ScholarshipApplicationForm> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<String> uid;
 
@@ -37,10 +36,10 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
   final _ageController = TextEditingController();
   final _contactController = TextEditingController();
   final _genderController = TextEditingController();
-  final _yoeController = TextEditingController();
+  final _coverletterController = TextEditingController();
 
   late String filename;
-  String resumeName = 'Resume';
+  String coverLetterName = 'Cover Letter';
 
   getFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -63,7 +62,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
         print('Error uploading file: $error');
       });
       setState(() {
-        resumeName = filename;
+        coverLetterName = filename;
       });
     } else {
       // User canceled the picker
@@ -75,7 +74,6 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
       ));
     }
   }
-
 
   @override
   void initState() {
@@ -105,7 +103,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
     _ageController.dispose();
     _contactController.dispose();
     _genderController.dispose();
-    _yoeController.dispose();
+    _coverletterController.dispose();
     super.dispose();
   }
 
@@ -127,27 +125,27 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      JobApplication jobApplication = JobApplication(
-        jobId: widget.job.jobId,
+      ScholarshipApplication scholarshipApplication = ScholarshipApplication(
+        sid: widget.scholarship.sid,
         uid: FirebaseAuth.instance.currentUser!.uid,
         name: _nameController.text,
         email: _emailController.text,
         age: int.parse(_ageController.text),
         contact: _contactController.text,
         gender: _genderController.text,
-        yoe: int.parse(_yoeController.text),
+        coverletter: _coverletterController.text,
       );
 
       FirebaseFirestore.instance
-          .collection('applications')
-          .add(jobApplication.toMap())
+          .collection('scholarshipapply')
+          .add(scholarshipApplication.toMap())
           .then((value) {
         showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
               title: Text('Success'),
-              content: Text('Job application submitted successfully!'),
+              content: Text('Scholarship application submitted successfully!'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -165,7 +163,8 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
           builder: (context) {
             return AlertDialog(
               title: Text('Error'),
-              content: Text('Failed to submit job application. Please try again.'),
+              content: Text(
+                  'Failed to submit scholarship application. Please try again.'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -183,10 +182,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
 
   @override
   Widget build(BuildContext context) {
-    w = MediaQuery
-        .of(context)
-        .size
-        .width;
+    w = MediaQuery.of(context).size.width;
     return Scaffold(
         body: Container(
           width: double.infinity,
@@ -234,7 +230,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                                   ),
                                 ),
                                 Text(
-                                  '${widget.job.companyName}: ${widget.job.roleAvailable}',
+                                  widget.scholarship.name,
                                   style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
@@ -376,32 +372,6 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                               },
                             ),
 
-                            TextFormField(
-                              controller: _yoeController,
-                              decoration: InputDecoration(
-                                hintText: 'Years of Experience',
-                                filled: true,
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 8.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter years of experience';
-                                }
-                                return null;
-                              },
-                            ),
-
                             Row(
                               children: [
 
@@ -413,7 +383,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                                           bottom: 10.0, top: 10.0),
                                       child: Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(resumeName,
+                                        child: Text(coverLetterName,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w300,
                                               color: Colors.grey.shade700
@@ -421,17 +391,14 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                                         ),
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: (){},
                                     style: ButtonStyle(
                                       elevation: MaterialStateProperty.all(0),
-                                      backgroundColor: MaterialStateProperty
-                                          .all(Colors.grey.shade100),
+                                      backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
                                       shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              color: Colors.grey.shade100),
-                                          borderRadius: BorderRadius.circular(
-                                              10),
+                                          side: BorderSide(color: Colors.grey.shade100),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                       ),
                                     ),
@@ -444,12 +411,10 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                                   style: ButtonStyle(
                                     elevation: MaterialStateProperty.all(0),
                                     backgroundColor:
-                                    MaterialStateProperty.all(
-                                        AppColors.primary),
+                                    MaterialStateProperty.all(AppColors.primary),
                                     shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: AppColors.primary),
+                                        side: BorderSide(color: AppColors.primary),
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                     ),
@@ -461,8 +426,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                                     child: Text(
                                       'Upload',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 18),
+                                          fontWeight: FontWeight.w700, fontSize: 18),
                                     ),
                                   ),
                                 ),
@@ -543,8 +507,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                                 child: Text(
                                   'Apply',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18),
+                                      fontWeight: FontWeight.w700, fontSize: 18),
                                 ),
                               ),
                             ),
@@ -559,7 +522,104 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
           ),
         ));
   }
-
 }
 
 
+// Widget build(BuildContext context) {
+//
+//   return Scaffold(
+//     appBar: AppBar(
+//       title: Text('Job Application'),
+//     ),
+//     body: SingleChildScrollView(
+//       child: Padding(
+//         padding: EdgeInsets.all(16.0),
+//         child: Form(
+//           key: _formKey,
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(
+//                 'Job Title: ${widget.job.roleAvailable} - ${widget.job.companyName}',
+//                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//               ),
+//               Text(
+//                 'Your ID: ${FirebaseAuth.instance.currentUser!.uid}',
+//                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//               ),
+//               SizedBox(height: 16),
+//
+//               TextFormField(
+//                 controller: _nameController,
+//                 decoration: InputDecoration(labelText: 'Name'),
+//                 validator: (value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your name';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               TextFormField(
+//                 controller: _emailController,
+//                 decoration: InputDecoration(labelText: 'Email'),
+//                 validator: (value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your email';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               TextFormField(
+//                 controller: _ageController,
+//                 keyboardType: TextInputType.number,
+//                 decoration: InputDecoration(labelText: 'Age'),
+//                 validator: (value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your age';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               TextFormField(
+//                 controller: _contactController,
+//                 decoration: InputDecoration(labelText: 'Contact'),
+//                 validator: (value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your contact';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               TextFormField(
+//                 controller: _genderController,
+//                 decoration: InputDecoration(labelText: 'Gender'),
+//                 validator: (value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your gender';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               TextFormField(
+//                 controller: _yoeController,
+//                 keyboardType: TextInputType.number,
+//                 decoration: InputDecoration(labelText: 'Years of Experience'),
+//                 validator: (value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your years of experience';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               SizedBox(height: 16),
+//               ElevatedButton(
+//                 onPressed: _submitForm,
+//                 child: Text('Apply'),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }

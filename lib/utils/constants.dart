@@ -11,3 +11,15 @@ const String image3 = 'images/image3.png';
 const String jobIcon = 'images/jobs.png';
 const String scholarIcon = 'images/scholarship.png';
 const String trainingIcon = 'images/training.png';
+const String appDev = 'images/app-dev.png';
+const String dataAnal = 'images/data-analysis.png';
+const String digMark = 'images/digital-marketing.png';
+const String hrm = 'images/hrm.png';
+const String product = 'images/product.png';
+const String uiux = 'images/ui.png';
+const String review1 = 'images/review1.jpeg';
+const String review2 = 'images/review2.jpeg';
+const String review3 = 'images/review3.jpeg';
+
+const String userProfile = 'images/user-image.png';
+

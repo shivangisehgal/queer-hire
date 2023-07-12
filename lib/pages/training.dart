@@ -58,12 +58,12 @@ class _TrainingPageState extends State<TrainingPage> {
                 spacing: 50,
                 runSpacing: 30,
                 children: [
-                  CustomCard(title: 'App Development'),
-                  CustomCard(title: 'UI/UX Designing'),
-                  CustomCard(title: 'Product Management'),
-                  CustomCard(title: 'Digital Marketing'),
-                  CustomCard(title: 'HR Management'),
-                  CustomCard(title: 'Data Analysis'),
+                  CustomCard(title: 'App Development', image: appDev),
+                  CustomCard(title: 'UI/UX Designing', image: uiux,),
+                  CustomCard(title: 'Product Management', image: product,),
+                  CustomCard(title: 'Digital Marketing', image: digMark,),
+                  CustomCard(title: 'HR Management', image: hrm,),
+                  CustomCard(title: 'Data Analysis', image: dataAnal,),
                 ],
               ),
             ],
@@ -76,9 +76,10 @@ class _TrainingPageState extends State<TrainingPage> {
 
 
 class CustomCard extends StatelessWidget {
-  CustomCard({required this.title});
+  CustomCard({required this.title, required this.image});
 
   final String title;
+  final String image;
 
   void _showDialog(BuildContext context) {
     showDialog(
@@ -162,9 +163,23 @@ class CustomCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundColor: AppColors.primary,
-                radius: 35,
+              Container(
+                width: 70,
+                height: 70,
+                decoration:
+                ShapeDecoration(
+                    shape: CircleBorder(),
+                    color: AppColors.primary),
+                child: Padding(
+                  padding: EdgeInsets.all(3),
+                  child: DecoratedBox(
+                    decoration: ShapeDecoration(
+                        shape: CircleBorder(),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(image))),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
               Text(

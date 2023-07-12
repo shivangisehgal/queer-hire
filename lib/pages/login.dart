@@ -112,11 +112,14 @@ class _LoginContainerState extends State<LoginContainer> {
           ],
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
             child: Text('Cancel'),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(AppColors.primary),
+            ),
           ),
           ElevatedButton(
             onPressed: () {

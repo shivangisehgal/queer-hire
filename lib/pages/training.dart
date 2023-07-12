@@ -77,34 +77,106 @@ class _TrainingPageState extends State<TrainingPage> {
 
 class CustomCard extends StatelessWidget {
   CustomCard({required this.title});
-  String title;
+
+  final String title;
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Thank you for your interest!',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(height: 20),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: 'Congratulations, you\'ve taken the first step towards mastering the ',
+                      ),
+                      TextSpan(
+                        text: title,
+                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+                      ),
+                      TextSpan(
+                        text: ' course. Our team is excited to bring you an exceptional learning experience!\n\n',
+                      ),
+                      TextSpan(
+                        text: 'Stay tuned, as we prepare to launch soon.\n\nWe will notify you via email when this course becomes available.\n\n',
+                      ),
+
+                      TextSpan(
+                        text: 'Keep exploring, keep growing, and keep rocking!',
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                  style: ElevatedButton.styleFrom(
+                    primary: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Container(
-        height: 200,
-        width: 350,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              backgroundColor: AppColors.primary,
-              radius: 35,
-            ),
-            SizedBox(height: 20,),
-            Text(title,
-              style: TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-                fontSize: 18.0,
+    return GestureDetector(
+      onTap: () {
+        _showDialog(context);
+      },
+      child: Card(
+        color: Colors.white,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+          height: 200,
+          width: 350,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                backgroundColor: AppColors.primary,
+                radius: 35,
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              Text(
+                title,
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

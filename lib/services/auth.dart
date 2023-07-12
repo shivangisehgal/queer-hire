@@ -86,6 +86,16 @@ class AuthService {
     }
   }
 
+  // Forgot password
+  Future<void> resetPassword(String email, BuildContext context) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      showSnackBar(context, 'Password reset email sent. Please check your email.');
+    } catch (e) {
+      showSnackBar(context, 'Failed to send password reset email. Please try again.');
+    }
+  }
+
 //  Future signInWithGoogle() async {
 //    try{
 //      GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -129,6 +139,20 @@ class AuthService {
       'name': name,
       'isRecruiter': isRecruiter
     });
+  }
+
+  Future<bool> checkEmailExists(String email) async {
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Error checking email existence: $e');
+      return false;
+    }
   }
 
   

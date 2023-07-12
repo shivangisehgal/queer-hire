@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+
   @override
   Widget build(BuildContext context) {
     w = MediaQuery.of(context).size.width;
@@ -72,6 +73,69 @@ class _LoginContainerState extends State<LoginContainer> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  void _showResetPasswordDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Reset Password'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Enter your email to reset your password.'),
+            SizedBox(height: 20),
+            TextFormField(
+              controller: emailController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: 'Email',
+                filled: true,
+                contentPadding: const EdgeInsets.only(
+                  left: 14.0,
+                  bottom: 8.0,
+                  top: 8.0,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade100),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade100),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+                _auth.checkEmailExists(emailController.text).then((exists) {
+                  if (exists) {
+                    _auth
+                        .resetPassword(emailController.text, context)
+                        .then((_) => Navigator.of(context).pop());
+                  } else {
+                    showSnackBar(context, 'Email does not exist');
+                  }
+                });
+            },
+            child: Text('Reset Password'),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   void dispose()
   {
@@ -163,11 +227,17 @@ class _LoginContainerState extends State<LoginContainer> {
                 ),
               ),
               SizedBox(height: 20),
-              Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  letterSpacing: 1.1,
-                  fontSize: 12,
+
+              GestureDetector(
+                onTap: (){
+                  _showResetPasswordDialog(context);
+                },
+                child: Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    letterSpacing: 1.1,
+                    fontSize: 12,
+                  ),
                 ),
               ),
               SizedBox(height: 5),

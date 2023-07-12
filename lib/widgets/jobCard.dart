@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '/utils/colors.dart';
 import '/utils/styles.dart';
 import '/utils/constants.dart';
@@ -38,7 +39,7 @@ class _JobCardState extends State<JobCard> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               SizedBox(height: 20),
               Card(
@@ -123,12 +124,20 @@ class _JobCardState extends State<JobCard> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => JobApplicationForm(job: JobModel(jobId: widget.jobId, companyName: widget.company, description: widget.description, openings: widget.openings, roleAvailable: widget.role)),
-                    ),
-                  );
+                  if(FirebaseAuth.instance.currentUser == null)
+                  {
+                    GoRouter.of(context).pushNamed('login');
+                  }
+
+                  else
+                    {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => JobApplicationForm(job: JobModel(jobId: widget.jobId, companyName: widget.company, description: widget.description, openings: widget.openings, roleAvailable: widget.role)),
+                        ),
+                      );
+                    }
                 },
               ),
               SizedBox(height: 20),

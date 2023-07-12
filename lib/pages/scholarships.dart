@@ -71,35 +71,32 @@ class _ScholarshipsPageState extends State<ScholarshipsPage> {
                     if (!snapshot.hasData) {
                       return Text("There are no scholarships available");
                     }
-                    return Container(
-                      height: h! * 1.5, // Set the desired height
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: (snapshot.data!.docs.length / 3).ceil(),
-                        itemBuilder: (context, rowIndex) {
-                          int startIndex = rowIndex * 3;
-                          int endIndex = startIndex + 3;
-                          if (endIndex > snapshot.data!.docs.length) {
-                            endIndex = snapshot.data!.docs.length;
-                          }
-                          List<DocumentSnapshot> rowItems =
-                          snapshot.data!.docs.sublist(startIndex, endIndex);
-                          return Row(
-                            //crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: rowItems.map((doc) {
-                              return ScholarshipCard(
-                                sid: doc['sid'],
-                                name: doc['name'],
-                                description: doc['description'],
-                                eligibility: doc['eligibility'],
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      //physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: (snapshot.data!.docs.length / 3).ceil(),
+                      itemBuilder: (context, rowIndex) {
+                        int startIndex = rowIndex * 3;
+                        int endIndex = startIndex + 3;
+                        if (endIndex > snapshot.data!.docs.length) {
+                          endIndex = snapshot.data!.docs.length;
+                        }
+                        List<DocumentSnapshot> rowItems =
+                        snapshot.data!.docs.sublist(startIndex, endIndex);
+                        return Row(
+                          //crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: rowItems.map((doc) {
+                            return ScholarshipCard(
+                              sid: doc['sid'],
+                              name: doc['name'],
+                              description: doc['description'],
+                              eligibility: doc['eligibility'],
+                            );
+                          }).toList(),
+                        );
+                      },
                     );
                   },
                 ),

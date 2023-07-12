@@ -104,12 +104,15 @@ class _ScholarshipCardState extends State<ScholarshipCard> {
                     {
                       GoRouter.of(context).pushNamed('login');
                     }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ScholarshipApplicationForm(scholarship: ScholarshipModel(sid: widget.sid, name: widget.name, description: widget.description, eligibility: widget.eligibility)),
-                    ),
-                  );
+                  else
+                    {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ScholarshipApplicationForm(scholarship: ScholarshipModel(sid: widget.sid, name: widget.name, description: widget.description, eligibility: widget.eligibility)),
+                        ),
+                      );
+                    }
                 },
               ),
               SizedBox(height: 20),

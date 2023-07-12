@@ -40,6 +40,7 @@ class _ScholarshipApplicationFormState
 
   late String filename;
   String coverLetterName = 'Cover Letter';
+  bool isUploaded = false;
 
   getFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -57,13 +58,15 @@ class _ScholarshipApplicationFormState
       uploadTask.then((snapshot) {
         // File uploaded successfully
         print('File uploaded');
+        setState(() {
+          coverLetterName = filename;
+          isUploaded = true;
+        });
       }).catchError((error) {
         // Handle upload error
         print('Error uploading file: $error');
       });
-      setState(() {
-        coverLetterName = filename;
-      });
+
     } else {
       // User canceled the picker
       // You can show snackbar or fluttertoast
@@ -125,58 +128,153 @@ class _ScholarshipApplicationFormState
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      ScholarshipApplication scholarshipApplication = ScholarshipApplication(
-        sid: widget.scholarship.sid,
-        uid: FirebaseAuth.instance.currentUser!.uid,
-        name: _nameController.text,
-        email: _emailController.text,
-        age: int.parse(_ageController.text),
-        contact: _contactController.text,
-        gender: _genderController.text,
-        coverletter: _coverletterController.text,
-      );
+      if(isUploaded)
+        {
+          ScholarshipApplication scholarshipApplication = ScholarshipApplication(
+            sid: widget.scholarship.sid,
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            name: _nameController.text,
+            email: _emailController.text,
+            age: int.parse(_ageController.text),
+            contact: _contactController.text,
+            gender: _genderController.text,
+            coverletter: _coverletterController.text,
+          );
 
-      FirebaseFirestore.instance
-          .collection('scholarshipapply')
-          .add(scholarshipApplication.toMap())
-          .then((value) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Success'),
-              content: Text('Scholarship application submitted successfully!'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
+          FirebaseFirestore.instance
+              .collection('scholarshipapply')
+              .where('uid', isEqualTo: scholarshipApplication.uid)
+              .where('sid', isEqualTo: scholarshipApplication.sid)
+              .get()
+              .then((QuerySnapshot querySnapshot) {
+            if (querySnapshot.docs.isNotEmpty) {
+              // Matching document found, update its data
+              var docId = querySnapshot.docs.first.id;
+              FirebaseFirestore.instance
+                  .collection('scholarshipapply')
+                  .doc(docId)
+                  .update(scholarshipApplication.toMap())
+                  .then((value) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Success'),
+                      content: Text('Scholarship application updated successfully!'),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            GoRouter.of(context).pushNamed('home');
+                          },
+
+                          child: Text('OK'),
+
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                          ),
+                        ),
+                      ],
+                    );
                   },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }).catchError((error) {
+                );
+              }).catchError((error) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Error'),
+                      content: Text(
+                          'Failed to update scholarship application. Please try again.'),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('OK'),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              });
+            } else {
+              // No matching document found, add a new document
+              FirebaseFirestore.instance
+                  .collection('scholarshipapply')
+                  .add(scholarshipApplication.toMap())
+                  .then((value) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Success'),
+                      content: Text('Scholarship application submitted successfully!'),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            GoRouter.of(context).pushNamed('home');
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                          ),
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }).catchError((error) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Error'),
+                      content: Text(
+                          'Failed to submit scholarship application. Please try again.'),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('OK'),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              });
+            }
+          });
+        } else {
         showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('Error'),
-              content: Text(
-                  'Failed to submit scholarship application. Please try again.'),
+              title: Text('Upload Required'),
+              content: Text('Please upload a file before submitting the form.'),
               actions: [
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                  ),
                   child: Text('OK'),
                 ),
               ],
             );
           },
         );
-      });
+      }
     }
   }
 
@@ -324,7 +422,7 @@ class _ScholarshipApplicationFormState
                         TextFormField(
                           controller: _contactController,
                           decoration: InputDecoration(
-                            hintText: 'Contact: +91',
+                            hintText: 'Contact No.',
                             filled: true,
                             contentPadding: const EdgeInsets.only(
                                 left: 14.0, bottom: 8.0, top: 8.0),
@@ -340,8 +438,16 @@ class _ScholarshipApplicationFormState
                             ),
                           ),
                           validator: (value) {
-                            if (value!.length != 10 || value!.isEmpty) {
-                              return 'Please enter valid contact';
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your contact number';
+                            }
+                            // Regex pattern for phone number validation
+                            final phoneRegex = RegExp(
+                              r'(^(?:[+0]9)?[0-9]{10,12}$)',
+                              caseSensitive: false,
+                            );
+                            if (!phoneRegex.hasMatch(value)) {
+                              return 'Please enter a valid contact number';
                             }
                             return null;
                           },
@@ -433,57 +539,6 @@ class _ScholarshipApplicationFormState
 
                           ],
                         ),
-
-                        // TextFormField(
-                        //   controller: _coverletterController,
-                        //   //keyboardType: TextInputType.number,
-                        //   decoration: InputDecoration(
-                        //     hintText: 'Cover Letter',
-                        //     filled: true,
-                        //     contentPadding: const EdgeInsets.only(
-                        //         left: 14.0, bottom: 8.0, top: 8.0),
-                        //     focusedBorder: OutlineInputBorder(
-                        //       borderSide:
-                        //           BorderSide(color: Colors.grey.shade100),
-                        //       borderRadius: BorderRadius.circular(10),
-                        //     ),
-                        //     enabledBorder: OutlineInputBorder(
-                        //       borderSide:
-                        //           BorderSide(color: Colors.grey.shade100),
-                        //       borderRadius: BorderRadius.circular(10),
-                        //     ),
-                        //   ),
-                        //   validator: (value) {
-                        //     if (value!.isEmpty) {
-                        //       return 'Please enter your years of experience';
-                        //     }
-                        //     return null;
-                        //   },
-                        // ),
-
-                        // ElevatedButton(
-                        //   style: ButtonStyle(
-                        //     elevation: MaterialStateProperty.all(0),
-                        //     backgroundColor:
-                        //         MaterialStateProperty.all(AppColors.primary),
-                        //     shape: MaterialStateProperty.all(
-                        //       RoundedRectangleBorder(
-                        //         side: BorderSide(color: AppColors.primary),
-                        //         borderRadius: BorderRadius.circular(50),
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   onPressed: getFile,
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.symmetric(
-                        //         horizontal: 15.0, vertical: 5),
-                        //     child: Text(
-                        //       'Apply',
-                        //       style: TextStyle(
-                        //           fontWeight: FontWeight.w700, fontSize: 18),
-                        //     ),
-                        //   ),
-                        // ),
 
                         SizedBox(height: 16),
                         ElevatedButton(

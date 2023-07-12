@@ -383,7 +383,7 @@ class _MyJobApplicationsState extends State<MyJobApplications> {
                                       child: Column(
                                           children: [
                                             Text(
-                                              'You haven\'t applied for any jobs yet :)',
+                                              'You haven\'t applied for any jobs yet :(',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   color: Colors.grey.shade700
@@ -406,7 +406,9 @@ class _MyJobApplicationsState extends State<MyJobApplications> {
                                                   ),
                                                 ),
                                               ),
-                                              onPressed: (){},
+                                              onPressed: (){
+                                                GoRouter.of(context).pushNamed('jobs');
+                                              },
                                               child: Padding(
                                                 padding: const EdgeInsets.symmetric(
                                                     horizontal: 10.0, vertical: 4),
@@ -446,7 +448,7 @@ class _MyJobApplicationsState extends State<MyJobApplications> {
                                           child: ListTile(
                                             title: Text(job.companyName),
                                             subtitle: Text(
-                                                job.roleAvailable,
+                                                '${job.roleAvailable}: Applied',
                                               style: TextStyle(
                                                 color: AppColors.primary
                                               ),
@@ -608,7 +610,7 @@ class _MyScholarshipApplicationsState extends State<MyScholarshipApplications> {
                                       child: Column(
                                         children: [
                                           Text(
-                                            'You haven\'t applied to any scholarships yet :)',
+                                            'You haven\'t applied to any scholarships yet :(',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             color: Colors.grey.shade700
@@ -631,7 +633,9 @@ class _MyScholarshipApplicationsState extends State<MyScholarshipApplications> {
                                                 ),
                                               ),
                                             ),
-                                            onPressed: (){},
+                                            onPressed: (){
+                                              GoRouter.of(context).pushNamed('scholarships');
+                                            },
                                             child: Padding(
                                               padding: const EdgeInsets.symmetric(
                                                   horizontal: 10.0, vertical: 4),
@@ -668,7 +672,12 @@ class _MyScholarshipApplicationsState extends State<MyScholarshipApplications> {
                                         ),
                                         child: ListTile(
                                           title: Text(scholarship.name),
-                                          //subtitle: Text(job.roleAvailable),
+                                          subtitle: Text(
+                                              'Applied',
+                                            style: TextStyle(
+                                                color: AppColors.primary
+                                            ),
+                                          ),
                                           // Display other job details here
                                         ),
                                       ),

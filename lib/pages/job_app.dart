@@ -41,6 +41,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
 
   late String filename;
   String resumeName = 'Resume';
+  bool isUploaded = false;
 
   getFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -58,13 +59,16 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
       uploadTask.then((snapshot) {
         // File uploaded successfully
         print('File uploaded');
+        setState(() {
+          resumeName = filename;
+          isUploaded = true;
+        });
+
       }).catchError((error) {
         // Handle upload error
         print('Error uploading file: $error');
       });
-      setState(() {
-        resumeName = filename;
-      });
+
     } else {
       // User canceled the picker
       // You can show snackbar or fluttertoast
@@ -127,59 +131,151 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      JobApplication jobApplication = JobApplication(
-        jobId: widget.job.jobId,
-        uid: FirebaseAuth.instance.currentUser!.uid,
-        name: _nameController.text,
-        email: _emailController.text,
-        age: int.parse(_ageController.text),
-        contact: _contactController.text,
-        gender: _genderController.text,
-        yoe: int.parse(_yoeController.text),
-      );
-
-      FirebaseFirestore.instance
-          .collection('applications')
-          .add(jobApplication.toMap())
-          .then((value) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Success'),
-              content: Text('Job application submitted successfully!'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
+      if (isUploaded) {
+        JobApplication jobApplication = JobApplication(
+          jobId: widget.job.jobId,
+          uid: FirebaseAuth.instance.currentUser!.uid,
+          name: _nameController.text,
+          email: _emailController.text,
+          age: int.parse(_ageController.text),
+          contact: _contactController.text,
+          gender: _genderController.text,
+          yoe: int.parse(_yoeController.text),
         );
-      }).catchError((error) {
+
+        FirebaseFirestore.instance
+            .collection('applications')
+            .where('uid', isEqualTo: jobApplication.uid)
+            .where('jobId', isEqualTo: jobApplication.jobId)
+            .get()
+            .then((snapshot) {
+          if (snapshot.docs.isNotEmpty) {
+            // Entry with the same 'uid' and 'jobId' already exists, update it
+            String existingDocId = snapshot.docs.first.id;
+            FirebaseFirestore.instance
+                .collection('applications')
+                .doc(existingDocId)
+                .update(jobApplication.toMap())
+                .then((value) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Success'),
+                    content: Text('Job application updated successfully!'),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          GoRouter.of(context).pushNamed('home');
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                        ),
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }).catchError((error) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Error'),
+                    content: Text('Failed to update job application. Please try again.'),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                        ),
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
+          } else {
+            // Entry with the same 'uid' and 'jobId' doesn't exist, add a new entry
+            FirebaseFirestore.instance
+                .collection('applications')
+                .add(jobApplication.toMap())
+                .then((value) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Success'),
+                    content: Text('Job application submitted successfully!'),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          GoRouter.of(context).pushNamed('home');
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                        ),
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }).catchError((error) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Error'),
+                    content: Text('Failed to submit job application. Please try again.'),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                        ),
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
+          }
+        });
+      } else {
         showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('Error'),
-              content: Text('Failed to submit job application. Please try again.'),
+              title: Text('Upload Required'),
+              content: Text('Please upload a file before submitting the form.'),
               actions: [
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(AppColors.primary),
+                  ),
                   child: Text('OK'),
                 ),
               ],
             );
           },
         );
-      });
+      }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +424,7 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                             TextFormField(
                               controller: _contactController,
                               decoration: InputDecoration(
-                                hintText: 'Contact: +91',
+                                hintText: 'Contact No.',
                                 filled: true,
                                 contentPadding: const EdgeInsets.only(
                                     left: 14.0, bottom: 8.0, top: 8.0),
@@ -344,8 +440,16 @@ class _JobApplicationFormState extends State<JobApplicationForm> {
                                 ),
                               ),
                               validator: (value) {
-                                if (value!.length != 10 || value!.isEmpty) {
-                                  return 'Please enter valid contact';
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your contact number';
+                                }
+                                // Regex pattern for phone number validation
+                                final phoneRegex = RegExp(
+                                  r'(^(?:[+0]9)?[0-9]{10,12}$)',
+                                  caseSensitive: false,
+                                );
+                                if (!phoneRegex.hasMatch(value)) {
+                                  return 'Please enter a valid contact number';
                                 }
                                 return null;
                               },

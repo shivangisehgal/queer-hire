@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import '/utils/colors.dart';
 import '/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 import '/pages/containers/container1.dart';
 import '/pages/containers/container2.dart';
 import '/pages/containers/container3.dart';
@@ -26,10 +27,78 @@ class Home extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: (w! < 1080) ? AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text('QueerHire'),
+        title: Text('QueerHire',
+        style: TextStyle(
+          color: AppColors.primary
+        ),),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              color: AppColors.primary,
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
       ) : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
+      drawer: w! < 1080 ? Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Home'),
+              onTap: () {
+                // Handle Home tap
+                GoRouter.of(context).pushNamed('home');
+              },
+            ),
+            ListTile(
+              title: Text('Jobs'),
+              onTap: () {
+                // Handle Jobs tap
+                GoRouter.of(context).pushNamed('jobs');
+              },
+            ),
+            ListTile(
+              title: Text('Scholarships'),
+              onTap: () {
+                // Handle Scholarships tap
+                GoRouter.of(context).pushNamed('scholarships');
+              },
+            ),
+            ListTile(
+              title: Text('Training'),
+              onTap: () {
+                // Handle Training tap
+                GoRouter.of(context).pushNamed('training');
+              },
+            ),
+            ListTile(
+              title: Text('Guidance'),
+              onTap: () {
+                // Handle Guidance tap
+                GoRouter.of(context).pushNamed('guidance');
+              },
+            ),
+          ],
+        ),
+      ) : null,
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

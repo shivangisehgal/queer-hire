@@ -9,7 +9,6 @@ import '/pages/scholarships.dart';
 import '/pages/counselling.dart';
 import '/pages/login.dart';
 import '/pages/register.dart';
-import '/pages/signOut.dart';
 import '/pages/profile_page.dart';
 
 class MyAppRouter{
@@ -69,14 +68,6 @@ class MyAppRouter{
           path: '/register',
           pageBuilder: (context, state){
             return MaterialPage(child: RegisterPage());
-          }
-      ),
-
-      GoRoute(
-          name: 'signout',
-          path: '/signout',
-          pageBuilder: (context, state){
-            return MaterialPage(child: SignOutPage());
           }
       ),
 

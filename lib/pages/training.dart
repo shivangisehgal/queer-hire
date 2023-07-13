@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import '/widgets/bottomAppBar.dart';
 import '/utils/colors.dart';
 import '/utils/constants.dart';
 import '/widgets/navbar.dart';
-import '/widgets/jobCard.dart';
+import '/widgets/mobile.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -20,14 +19,8 @@ class _TrainingPageState extends State<TrainingPage> {
     h = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: (w! < 1080)
-          ? AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              centerTitle: true,
-              title: Text('QueerHire'),
-            )
-          : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
+      appBar: (w! < 1070) ? PreferredSize(child: CustomAppBar(), preferredSize: Size.fromHeight(60)) : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
+      drawer: (w! < 1070) ? CustomDrawer() : null,
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 50, vertical: h! * 0.2),

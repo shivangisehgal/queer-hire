@@ -11,9 +11,14 @@ class Container1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenTypeLayout(
-      mobile: MobileContainer1(),
-      desktop: DesktopContainer1(),
+    return LayoutBuilder(
+      builder: (context, constraints){
+        if(constraints.maxWidth < 970)
+          return MobileContainer1();
+
+        else
+          return DesktopContainer1();
+      }
     );
   }
 }
@@ -54,7 +59,7 @@ class _DesktopContainer1State extends State<DesktopContainer1> {
                     text: TextSpan(
                       style: TextStyle(
                           height: 1.2,
-                          fontSize: w! / 15,
+                          fontSize: w! / 12,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'HindSiliguri'),
                       children: <TextSpan>[
@@ -83,13 +88,6 @@ class _DesktopContainer1State extends State<DesktopContainer1> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  //SizedBox(height: 20.0),
-                  // Text('Your one-stop-shop for queer-friendly job opportunities and resources.',
-                  //   style: TextStyle(
-                  //     fontSize: 16,
-                  //     color: Colors.grey[400],
-                  //   ),
-                  // ),
                   SizedBox(height: 20.0),
                   FirebaseAuth.instance.currentUser == null
                       ?
@@ -162,69 +160,132 @@ class _DesktopContainer1State extends State<DesktopContainer1> {
   }
 }
 
-Widget MobileContainer1() {
-  return Container(
-    //margin: EdgeInsets.symmetric(horizontal: w!/10),
-    child: Column(
-      children: <Widget>[
-        Container(
-          height: w! / 1.2,
-          width: w! / 1.2,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.contain,
-              image: AssetImage(illustration1),
+class MobileContainer1 extends StatefulWidget {
+  const MobileContainer1({Key? key}) : super(key: key);
+
+  @override
+  State<MobileContainer1> createState() => _MobileContainer1State();
+}
+
+class _MobileContainer1State extends State<MobileContainer1> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //margin: EdgeInsets.symmetric(horizontal: w!/10),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 600,
+            width: 600,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.contain,
+                image: AssetImage(illustration1),
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 20),
-        Container(
-          child: Column(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                      height: 1.2,
+                      fontSize: 80,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'HindSiliguri'),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: 'Q', style: TextStyle(color: AppColors.red)),
+                    TextSpan(
+                        text: 'u',
+                        style: TextStyle(color: AppColors.yellow)),
+                    TextSpan(
+                        text: 'e',
+                        style: TextStyle(color: AppColors.oliveGreen)),
+                    TextSpan(
+                        text: 'e',
+                        style: TextStyle(color: AppColors.pastelBlue)),
+                    TextSpan(
+                        text: 'r',
+                        style: TextStyle(color: AppColors.primary)),
+                    TextSpan(text: 'Hire'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.0),
               Text(
-                'Track your \nExpenses to \nSave Money',
+                'Breaking down employment barriers \nfor the LGBTQ+ community.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  height: 1.2,
-                  fontSize: w! / 10,
+
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 20.0),
-              Text(
-                'Helps you organize \nyour income and expenses',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[400],
-                ),
-              ),
-              SizedBox(height: 20.0),
+
+              FirebaseAuth.instance.currentUser == null
+                  ?
+              Column(
+                children: [
+                  Container(
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              AppColors.primary)),
+                      onPressed: () {
+                        GoRouter.of(context).pushNamed('login');
+                      },
+                      child: Text(
+                        'Login or Register',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),),
+                  SizedBox(
+                    height: 17.0,
+                  ),
+                  Text(
+                    'Join our community in just one step!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                ],
+              ) :
               Container(
-                height: 45,
-                child: ElevatedButton.icon(
+                height: 50,
+                child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(AppColors.primary)),
-                  onPressed: () {},
-                  icon: Icon(Icons.arrow_drop_down),
-                  label: Text('Try free demo'),
+                      backgroundColor: MaterialStateProperty.all(
+                          AppColors.primary)),
+                  onPressed: () {
+                    GoRouter.of(context).pushNamed('jobs');
+                  },
+                  child: Text(
+                    'Grab your dream oppportunity now!',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
-                '-Web, iOS and Android',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[400],
-                ),
-              ),
-              SizedBox(height: 20),
+              SizedBox(
+                height: 60.0,
+              )
             ],
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
+

@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import '/utils/colors.dart';
 import '/utils/constants.dart';
-import '/utils/styles.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import '/provider/user_provider.dart';
-import '/pages/signout.dart';
-import '/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '/widgets/mobile.dart';
+
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -18,7 +15,7 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
       //separate build functions
-      mobile: DesktopNavBar(),
+      mobile: CustomAppBar(),
       desktop: DesktopNavBar(),
     );
   }

@@ -55,7 +55,7 @@ class _JobCardState extends State<JobCard> {
                       child: Text(
                         this.widget.company,
                         style:
-                        TextStyle(fontSize: w! / 40, color: Colors.white),
+                        TextStyle(fontSize: 30, color: Colors.white),
                       ),
                     ),
                   ),

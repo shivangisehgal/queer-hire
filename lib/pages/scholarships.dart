@@ -7,6 +7,8 @@ import '/widgets/navbar.dart';
 import '/widgets/scholarshipCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '/widgets/mobile.dart';
+
 
 class ScholarshipsPage extends StatefulWidget {
   const ScholarshipsPage({Key? key}) : super(key: key);
@@ -35,12 +37,8 @@ class _ScholarshipsPageState extends State<ScholarshipsPage> {
     h = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: (w! < 1080) ? AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text('QueerHire'),
-      ) : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
+      appBar: (w! < 1070) ? PreferredSize(child: CustomAppBar(), preferredSize: Size.fromHeight(60)) : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
+      drawer: (w! < 1070) ? CustomDrawer() : null,
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 50, vertical: h! * 0.2),

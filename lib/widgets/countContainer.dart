@@ -3,14 +3,39 @@ import 'package:flutter/material.dart';
 import '/utils/colors.dart';
 import '/utils/constants.dart';
 
+
 class CountContainer extends StatefulWidget {
   const CountContainer({Key? key}) : super(key: key);
 
   @override
-  _CountContainerState createState() => _CountContainerState();
+  State<CountContainer> createState() => _CountContainerState();
 }
 
 class _CountContainerState extends State<CountContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (context, constraints){
+
+          if(constraints.maxWidth < 625)
+            return MobileCountContainer();
+          else
+            return DesktopCountContainer();
+        }
+    );
+  }
+}
+
+
+
+class DesktopCountContainer extends StatefulWidget {
+  const DesktopCountContainer({Key? key}) : super(key: key);
+
+  @override
+  _DesktopCountContainerState createState() => _DesktopCountContainerState();
+}
+
+class _DesktopCountContainerState extends State<DesktopCountContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -97,6 +122,65 @@ class _CountCardState extends State<CountCard> {
           ),
         )
       ],
+    );
+  }
+}
+
+class MobileCountContainer extends StatefulWidget {
+  const MobileCountContainer({Key? key}) : super(key: key);
+
+  @override
+  State<MobileCountContainer> createState() => _MobileCountContainerState();
+}
+
+class _MobileCountContainerState extends State<MobileCountContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 600,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        image: DecorationImage(
+            image: AssetImage(image3),
+            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+            fit: BoxFit.cover
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CountCard(count: 15, title: 'Companies'),
+          Container(
+            width: w! - 20,
+            child: Divider(
+              thickness: 3,
+              color: Colors.white.withOpacity(0.45),
+
+            ),
+          ),
+          CountCard(count: 60, title: 'Recruited'),
+          Container(
+            width: w! - 20,
+            child: Divider(
+              thickness: 3,
+              color: Colors.white.withOpacity(0.45),
+
+            ),
+          ),
+          CountCard(count: 12, title: 'Scholarships'),
+          Container(
+            width: w! - 20,
+            child: Divider(
+              thickness: 3,
+              color: Colors.white.withOpacity(0.45),
+
+            ),
+          ),
+          CountCard(count: 310, title: 'Trainees')
+        ],
+      ),
     );
   }
 }

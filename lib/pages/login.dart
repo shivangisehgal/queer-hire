@@ -10,10 +10,35 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (context, constraints){
+
+          if(constraints.maxWidth < 750)
+            return MobileLoginPage();
+
+          else
+            return DesktopLoginPage();
+        }
+    );
+  }
+}
+
+
+
+class DesktopLoginPage extends StatefulWidget {
+  const DesktopLoginPage({Key? key}) : super(key: key);
+
+  @override
+  _DesktopLoginPageState createState() => _DesktopLoginPageState();
+}
+
+class _DesktopLoginPageState extends State<DesktopLoginPage> {
 
 
   @override
@@ -24,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            //padding: EdgeInsets.only(top: h! * 0.2),
+
             child: Center(
               child: Card(
                 elevation: 15,
@@ -32,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Container(
-                  width: w! / 2,
+                  width: 720,
                   height: 500,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
@@ -40,9 +65,11 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     children: [
                       Expanded(
+                        flex: w! < 785 ? 3 : 1,
                         child: LoginContainer(),
                       ),
                       Expanded(
+                        flex: w! < 785 ? 2 : 1,
                         child: HelloLoginContainer(),
                       ),
                     ],
@@ -56,6 +83,157 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
+class MobileLoginPage extends StatefulWidget {
+  const MobileLoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<MobileLoginPage> createState() => _MobileLoginPageState();
+}
+
+class _MobileLoginPageState extends State<MobileLoginPage> {
+  @override
+  Widget build(BuildContext context) {
+    w = MediaQuery.of(context).size.width;
+    h = MediaQuery.of(context).size.height;
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          end: Alignment.topLeft,
+          begin: Alignment.bottomRight,
+          colors: [
+            //Color(0xFFFDF7C3),
+            Color(0xFFFFDEB4),
+            Color(0XFFFFB4B4),
+            Color(0xFFB2A4FF),
+          ],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 50),
+                child: Column(
+                  children: [
+                    Card(
+                      elevation: 15,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Container(
+                        width: 360,
+                        //height: 500,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: LoginContainer(),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 30,
+                    ),
+
+                    Text(
+                      'New to QueerHire?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        overlayColor:
+                        MaterialStateProperty.all(Colors.white.withOpacity(0.05)),
+                        elevation: MaterialStateProperty.all(0),
+                        //backgroundColor: MaterialStateProperty.all(Colors.white),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.white, width: 2),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        GoRouter.of(context).pushNamed('register');
+                      },
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                        child: Text(
+                          'REGISTER',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      width: 100,
+                      child: Divider(
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        overlayColor:
+                        MaterialStateProperty.all(Colors.white.withOpacity(0.05)),
+                        elevation: MaterialStateProperty.all(0),
+                        //backgroundColor: MaterialStateProperty.all(Colors.white),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.white, width: 2),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        GoRouter.of(context).pushNamed('home');
+                      },
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                        child: Text(
+                          'RETURN HOME',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    //HelloLoginContainer(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
 
 class LoginContainer extends StatefulWidget {
   const LoginContainer({Key? key}) : super(key: key);
@@ -122,6 +300,9 @@ class _LoginContainerState extends State<LoginContainer> {
             ),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(AppColors.primary),
+            ),
             onPressed: () {
                 _auth.checkEmailExists(emailController.text).then((exists) {
                   if (exists) {
@@ -150,6 +331,7 @@ class _LoginContainerState extends State<LoginContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 500,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15.0), bottomLeft: Radius.circular(15.0)),
@@ -174,7 +356,7 @@ class _LoginContainerState extends State<LoginContainer> {
               Text(
                 'Enter the details',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 15,
                   letterSpacing: 1.1,
                 ),
               ),
@@ -238,8 +420,10 @@ class _LoginContainerState extends State<LoginContainer> {
                 child: Text(
                   'Forgot Password?',
                   style: TextStyle(
+                    color: AppColors.primary,
+                    //decoration: TextDecoration.underline,
                     letterSpacing: 1.1,
-                    fontSize: 12,
+                    fontSize: 15,
                   ),
                 ),
               ),

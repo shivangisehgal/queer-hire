@@ -37,7 +37,9 @@ class _ScholarshipsPageState extends State<ScholarshipsPage> {
     h = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: (w! < 1070) ? PreferredSize(child: CustomAppBar(), preferredSize: Size.fromHeight(60)) : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
+      appBar: (w! < 1070)
+          ? PreferredSize(child: CustomAppBar(), preferredSize: Size.fromHeight(60))
+          : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
       drawer: (w! < 1070) ? CustomDrawer() : null,
       body: SingleChildScrollView(
         child: Container(
@@ -58,48 +60,37 @@ class _ScholarshipsPageState extends State<ScholarshipsPage> {
             children: [
               Text(
                 'World\'s Most Inclusive Scholarships',
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: w! / 30, height: 1.1, fontWeight: FontWeight.w600),
-              ),
-              Center(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection('scholarships').snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData) {
-                      return Text("There are no scholarships available");
-                    }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      //physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: (snapshot.data!.docs.length / 3).ceil(),
-                      itemBuilder: (context, rowIndex) {
-                        int startIndex = rowIndex * 3;
-                        int endIndex = startIndex + 3;
-                        if (endIndex > snapshot.data!.docs.length) {
-                          endIndex = snapshot.data!.docs.length;
-                        }
-                        List<DocumentSnapshot> rowItems =
-                        snapshot.data!.docs.sublist(startIndex, endIndex);
-                        return Row(
-                          //crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: rowItems.map((doc) {
-                            return ScholarshipCard(
-                              sid: doc['sid'],
-                              name: doc['name'],
-                              description: doc['description'],
-                              eligibility: doc['eligibility'],
-                            );
-                          }).toList(),
-                        );
-                      },
-                    );
-                  },
+                  color: Colors.grey[700],
+                  fontSize: w! < 1300 ? 50 : w! / 30,
+                  height: 1.1,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-
+              SizedBox(
+                height: 70,
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('scholarships').snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text("There are no scholarships available");
+                  }
+                  return Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 20.0, // Adjust spacing between cards as needed
+                    children: snapshot.data!.docs.map((doc) {
+                      return ScholarshipCard(
+                        sid: doc['sid'],
+                        name: doc['name'],
+                        description: doc['description'],
+                        eligibility: doc['eligibility'],
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
               Divider(
                 thickness: 2,
                 height: 140,

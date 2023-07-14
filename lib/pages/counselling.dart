@@ -36,7 +36,10 @@ class _GuidancePageState extends State<GuidancePage> {
               ],
             ),
           ),
-          child: Container5(true),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: Container5(true),
+          ),
         ),
       ),
     );

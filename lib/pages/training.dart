@@ -40,9 +40,11 @@ class _TrainingPageState extends State<TrainingPage> {
             children: [
               Text(
                 'Be Job Ready',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.grey[700],
-                    fontSize: w! / 30, height: 1.1, fontWeight: FontWeight.w600),
+                    fontSize: 50,
+                    height: 1.1, fontWeight: FontWeight.w600),
               ),
               Divider(
                 height: 80,

@@ -51,7 +51,7 @@ class _DesktopContainer3State extends State<DesktopContainer3> {
               'Hear From Our Customers',
               style: TextStyle(
                   color: Colors.grey[700],
-                  fontSize: w! / 30,
+                  fontSize: 50,
                   height: 1.1,
                   fontWeight: FontWeight.w600),
             ),
@@ -213,16 +213,16 @@ class _MobileContainer3State extends State<MobileContainer3> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      height: 900,
-      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 80),
+      height: 1000,
+      padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'Hear From Our Customers',
             style: TextStyle(
               color: Colors.grey[700],
-              fontSize: 26,
+              fontSize: 35,
               height: 1.1,
               fontWeight: FontWeight.w600,
             ),

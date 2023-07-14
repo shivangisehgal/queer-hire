@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/widgets/mobile.dart';
 
-
 class JobsPage extends StatefulWidget {
   const JobsPage({Key? key}) : super(key: key);
 
@@ -34,7 +33,9 @@ class _JobsPageState extends State<JobsPage> {
     h = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: (w! < 1070) ? PreferredSize(child: CustomAppBar(), preferredSize: Size.fromHeight(60)) : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
+      appBar: (w! < 1070)
+          ? PreferredSize(child: CustomAppBar(), preferredSize: Size.fromHeight(60))
+          : PreferredSize(child: NavBar(), preferredSize: Size.fromHeight(100)),
       drawer: (w! < 1070) ? CustomDrawer() : null,
       body: SingleChildScrollView(
         child: Container(
@@ -55,11 +56,16 @@ class _JobsPageState extends State<JobsPage> {
             children: [
               Text(
                 'Applying for Jobs is Now Easy',
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: w! / 30,
-                    height: 1.1,
-                    fontWeight: FontWeight.w600),
+                  color: Colors.grey[700],
+                  fontSize: w! < 1300 ? 50 : w! / 30,
+                  height: 1.1,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                height: 70,
               ),
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance.collection('jobs').snapshots(),
@@ -67,105 +73,21 @@ class _JobsPageState extends State<JobsPage> {
                   if (!snapshot.hasData) {
                     return Text("There are no job listings available");
                   }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    //physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemCount: (snapshot.data!.docs.length / 3).ceil(),
-                    itemBuilder: (context, rowIndex) {
-                      int startIndex = rowIndex * 3;
-                      int endIndex = startIndex + 3;
-                      if (endIndex > snapshot.data!.docs.length) {
-                        endIndex = snapshot.data!.docs.length;
-                      }
-                      List<DocumentSnapshot> rowItems =
-                      snapshot.data!.docs.sublist(startIndex, endIndex);
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: rowItems.map((doc) {
-                          return JobCard(
-                            jobId: doc['jobId'],
-                            company: doc['companyName'],
-                            description: doc['description'],
-                            role: doc['roleAvailable'],
-                            openings: doc['openings'],
-                          );
-                        }).toList(),
+                  return Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 20.0, // Adjust spacing between cards as needed
+                    children: snapshot.data!.docs.map((doc) {
+                      return JobCard(
+                        jobId: doc['jobId'],
+                        company: doc['companyName'],
+                        description: doc['description'],
+                        role: doc['roleAvailable'],
+                        openings: doc['openings'],
                       );
-                    },
+                    }).toList(),
                   );
                 },
-              )
-
-              // StreamBuilder(
-              //     stream:
-              //         FirebaseFirestore.instance.collection('jobs').snapshots(),
-              //     builder: (BuildContext context,
-              //         AsyncSnapshot<QuerySnapshot> snapshot) {
-              //       if (!snapshot.hasData) {
-              //         return new Text("There is no expense");
-              //       }
-              //       return GridView.builder(
-              //         scrollDirection: Axis.vertical, //important
-              //         shrinkWrap: true, //important
-              //         //padding: EdgeInsets.fromLTRB(60.0, 40.0, 24.0, 24.0),
-              //         itemCount: snapshot.data!.docs.length,
-              //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //           crossAxisCount: 3,
-              //           mainAxisSpacing: 60,
-              //           crossAxisSpacing: 15,
-              //         ),
-              //         itemBuilder: (context, index) {
-              //           return JobCard(
-              //               jobId: snapshot.data!.docs[index]['jobId'],
-              //               company: snapshot.data!.docs[index]['companyName'],
-              //               description: snapshot.data!.docs[index]
-              //                   ['description'],
-              //               role: snapshot.data!.docs[index]['roleAvailable'],
-              //               openings: snapshot.data!.docs[index]['openings']);
-              //         },
-              //       );
-              //
-              //     })
-              // Divider(
-              //   thickness: 2,
-              //   height: 140,
-              // ),
-              // Text(
-              //   'Recruiter? Hire From Us',
-              //   style: TextStyle(
-              //       color: Colors.grey[700],
-              //       fontSize: w! / 30, height: 1.1, fontWeight: FontWeight.w600),
-              // ),
-              // SizedBox(height: 20),
-              // Container(
-              //   height: 40.0,
-              //   child: ElevatedButton(
-              //     style: ButtonStyle(
-              //       overlayColor:  MaterialStateProperty.all(AppColors.primary.withOpacity(0.05)),
-              //       elevation: MaterialStateProperty.all(0),
-              //       backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              //       shape: MaterialStateProperty.all(
-              //         RoundedRectangleBorder(
-              //           side: BorderSide(color: AppColors.primary, width: 2),
-              //           borderRadius: BorderRadius.circular(50),
-              //         ),
-              //       ),
-              //     ),
-              //
-              //     onPressed: () {},
-              //     child: Padding(
-              //       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              //       child: Text(
-              //         'HIRE NOW',
-              //         style: TextStyle(
-              //           fontSize: 20,
-              //           color: AppColors.primary,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              ),
             ],
           ),
         ),
@@ -173,46 +95,3 @@ class _JobsPageState extends State<JobsPage> {
     );
   }
 }
-
-//return Wrap(
-//   spacing: 50,
-//   runSpacing: 30,
-//   children: [
-//     JobCard(
-//         company: 'KPMG',
-//         description:
-//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-//         role: 'Junior Consultant',
-//         openings: 7),
-//     JobCard(
-//         company: 'KPMG',
-//         description:
-//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-//         role: 'Junior Consultant',
-//         openings: 7),
-//     JobCard(
-//         company: 'KPMG',
-//         description:
-//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-//         role: 'Junior Consultant',
-//         openings: 7),
-//     JobCard(
-//         company: 'KPMG',
-//         description:
-//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-//         role: 'Junior Consultant',
-//         openings: 7),
-//     JobCard(
-//         company: 'KPMG',
-//         description:
-//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-//         role: 'Junior Consultant',
-//         openings: 7),
-//     JobCard(
-//         company: 'KPMG',
-//         description:
-//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas facilisis pretium mauris, in ornare est tristique eget.',
-//         role: 'Junior Consultant',
-//         openings: 7),
-//   ],
-//

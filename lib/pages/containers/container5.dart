@@ -7,10 +7,33 @@ class Container5 extends StatefulWidget {
   bool inGuidancePage = false;
   Container5(this.inGuidancePage);
   @override
-  _Container5State createState() => _Container5State();
+  State<Container5> createState() => _Container5State();
 }
 
 class _Container5State extends State<Container5> {
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (context, constraints){
+
+          if(constraints.maxWidth < 785)
+            return MobileContainer5(widget.inGuidancePage);
+
+          else
+            return DesktopContainer5(widget.inGuidancePage);
+        }
+    );
+  }
+}
+
+class DesktopContainer5 extends StatefulWidget {
+  bool inGuidancePage = false;
+  DesktopContainer5(this.inGuidancePage);
+  @override
+  _DesktopContainer5State createState() => _DesktopContainer5State();
+}
+
+class _DesktopContainer5State extends State<DesktopContainer5> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +49,7 @@ class _Container5State extends State<Container5> {
             'Reach Out to Us',
             style: TextStyle(
                 color: Colors.grey[700],
-                fontSize: w! / 30,
+                fontSize: 50,
                 height: 1.1,
                 fontWeight: FontWeight.w600),
           ),
@@ -78,6 +101,90 @@ class _Container5State extends State<Container5> {
     );
   }
 }
+
+class MobileContainer5 extends StatefulWidget {
+  bool inGuidancePage = false;
+  MobileContainer5(this.inGuidancePage);
+  @override
+  State<MobileContainer5> createState() => _MobileContainer5State();
+}
+
+class _MobileContainer5State extends State<MobileContainer5> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 50),
+      //padding: EdgeInsets.symmetric(vertical: 100, horizontal: 50),
+      //padding: EdgeInsets.symmetric(horizontal: 50),
+      height: 1000,
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 60,
+          ),
+          Text(
+            'Reach Out to Us',
+            style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 40,
+                height: 1.1,
+                fontWeight: FontWeight.w600),
+          ),
+          SizedBox(height: 20),
+          Text(
+            'Do you need assistance with any queries regarding available opportunities or guidance for your career? \nDo you require a consultant to discuss your concerns and share your thoughts? \n\nWe are here to provide you with the support and assistance you need at all times.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'HindSiliguri',
+              color: widget.inGuidancePage == false ? Colors.grey.shade400 : Colors.grey[700],
+              fontSize: 18,
+            ),
+          ),
+          SizedBox(height: 60),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Get in touch',
+                    style: TextStyle(
+                      fontFamily: 'HindSiliguri',
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    'Send in your details, and we\'ll get back to you!',
+                    style: TextStyle(
+                      fontFamily: 'HindSiliguri',
+                      color: widget.inGuidancePage == false ? Colors.grey.shade400 : Colors.grey[700],
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: ContactForm()),
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
 
 class ContactForm extends StatefulWidget {
   const ContactForm({Key? key}) : super(key: key);
@@ -223,7 +330,7 @@ class _ContactFormState extends State<ContactForm> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
-                        hintText: '10 digit Contact No.',
+                        hintText: 'Contact No.',
                         contentPadding: const EdgeInsets.only(
                             left: 14.0, bottom: 8.0, top: 8.0),
                         focusedBorder: OutlineInputBorder(

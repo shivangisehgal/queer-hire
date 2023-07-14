@@ -43,7 +43,7 @@ class _ScholarshipCardState extends State<ScholarshipCard> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2),
                   child: Container(
                     width: 280,
                     child: Center(
@@ -51,7 +51,7 @@ class _ScholarshipCardState extends State<ScholarshipCard> {
                         this.widget.name,
                         textAlign: TextAlign.center,
                         style:
-                        TextStyle(fontSize: w! / 50, color: Colors.white),
+                        TextStyle(fontSize: 30, color: Colors.white),
                       ),
                     ),
                   ),

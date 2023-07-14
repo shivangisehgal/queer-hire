@@ -299,14 +299,14 @@ class _ScholarshipApplicationFormState
       ),
       child: Center(
         child: Container(
-          // padding: EdgeInsets.only(top: h! * 0.2),
+          padding: EdgeInsets.all(10),
           child: SingleChildScrollView(
             child: Center(
               child: Card(
                 elevation: 15,
                 child: Container(
                   padding: EdgeInsets.all(15),
-                  width: w! * 0.5,
+                  width: w! >= 1100 ? w! * 0.5 : 600,
                   height: 700,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),

@@ -11,16 +11,44 @@ import '/models/job.dart';
 import '/models/scholarship.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (context, constraints){
+
+          if(constraints.maxWidth < 740)
+            return MobileProfilePage();
+
+          else if(constraints.maxWidth < 1100)
+            return TabletProfilePage();
+
+          else
+            return DesktopProfilePage();
+        }
+    );
+  }
+}
+
+
+
+
+
+class DesktopProfilePage extends StatefulWidget {
+  const DesktopProfilePage({Key? key}) : super(key: key);
+
+  @override
+  _DesktopProfilePageState createState() => _DesktopProfilePageState();
+}
+
+class _DesktopProfilePageState extends State<DesktopProfilePage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<String> uid;
 
@@ -61,7 +89,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ProfileCard(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ProfileCard(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        LogoutCard(),
+                      ],
+                    ),
                     MyJobApplications(),
                     MyScholarshipApplications(),
                   ],
@@ -74,6 +111,160 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
+
+
+class TabletProfilePage extends StatefulWidget {
+  const TabletProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<TabletProfilePage> createState() => _TabletProfilePageState();
+}
+
+class _TabletProfilePageState extends State<TabletProfilePage> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    w = MediaQuery.of(context).size.width;
+    h = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            end: Alignment.topLeft,
+            begin: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFDF7C3).withOpacity(0.75),
+              Color(0xFFFFDEB4).withOpacity(0.75),
+              Color(0XFFFFB4B4).withOpacity(0.75),
+              Color(0xFFB2A4FF).withOpacity(0.75),
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              //padding: EdgeInsets.only(top: h! * 0.2),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 80,
+                    ),
+                    ProfileCard(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MyJobApplicationsShort(),
+                        MyScholarshipApplicationsShort(),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    LogoutCard(),
+                    SizedBox(
+                      height: 80,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class MobileProfilePage extends StatefulWidget {
+  const MobileProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<MobileProfilePage> createState() => _MobileProfilePageState();
+}
+
+class _MobileProfilePageState extends State<MobileProfilePage> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    w = MediaQuery.of(context).size.width;
+    h = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            end: Alignment.topLeft,
+            begin: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFDF7C3).withOpacity(0.75),
+              Color(0xFFFFDEB4).withOpacity(0.75),
+              Color(0XFFFFB4B4).withOpacity(0.75),
+              Color(0xFFB2A4FF).withOpacity(0.75),
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              //padding: EdgeInsets.only(top: h! * 0.2),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 80,
+                    ),
+                    ProfileCard(),
+                    MyJobApplicationsShort(),
+                    MyScholarshipApplicationsShort(),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    LogoutCard(),
+                    SizedBox(
+                      height: 80,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 class ProfileCard extends StatefulWidget {
   const ProfileCard({Key? key}) : super(key: key);
@@ -127,7 +318,7 @@ class _ProfileCardState extends State<ProfileCard> {
                         padding: EdgeInsets.only(top: 100 / 2.0),
                         child: Container(
                           //replace this Container with your Card
-                          height: 300.0,
+                          height: 180.0,
                           width: 350.0,
                           child: Card(
                             elevation: 15,
@@ -166,57 +357,6 @@ class _ProfileCardState extends State<ProfileCard> {
                                 Text(
                                   snap.data!.docs[0]['email'].toLowerCase(),
                                 ),
-                                SizedBox(
-                                  height: 100,
-                                ),
-                                Container(
-                                  width: 250,
-                                  height: 45.0,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      elevation: MaterialStateProperty.all(0),
-                                      backgroundColor:
-                                      MaterialStateProperty.all(
-                                          AppColors.primary),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              color: AppColors.primary),
-                                          borderRadius:
-                                          BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      //print(snap.data!);
-                                      AuthService _auth =
-                                      AuthService();
-                                      await _auth.signOut();
-                                      final SharedPreferences
-                                      prefs = await _prefs;
-                                      Future<String> _logout =
-                                      prefs
-                                          .setString(
-                                          'uid', '')
-                                          .then(
-                                              (bool success) {
-                                            return 'Log out success';
-                                          });
-                                      print('Log out');
-                                      GoRouter.of(context).pushNamed('home');
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: Text(
-                                        'LOG OUT',
-                                        style: TextStyle(
-                                          fontSize: 26,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
 
                               ],
                             ),
@@ -251,6 +391,141 @@ class _ProfileCardState extends State<ProfileCard> {
     );
   }
 }
+
+
+class LogoutCard extends StatefulWidget {
+  const LogoutCard({Key? key}) : super(key: key);
+
+  @override
+  State<LogoutCard> createState() => _LogoutCardState();
+}
+
+class _LogoutCardState extends State<LogoutCard> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all(2),
+        backgroundColor:
+        MaterialStateProperty.all(
+            AppColors.primary),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            side: BorderSide(
+              width: 4,
+                color: Colors.white),
+            borderRadius:
+            BorderRadius.circular(50),
+          ),
+        ),
+      ),
+      onPressed: () async {
+        //print(snap.data!);
+        AuthService _auth =
+        AuthService();
+        await _auth.signOut();
+        final SharedPreferences
+        prefs = await _prefs;
+        Future<String> _logout =
+        prefs
+            .setString(
+            'uid', '')
+            .then(
+                (bool success) {
+              return 'Log out success';
+            });
+        print('Log out');
+        GoRouter.of(context).pushNamed('home');
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          'LOG OUT',
+          style: TextStyle(
+            fontSize: 26,
+          ),
+        ),
+      ),
+    );
+    // return Container(
+    //   width: 350.0,
+    //   child: Card(
+    //     elevation: 15,
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(15),
+    //     ),
+    //     color: Colors.white,
+    //     child: Padding(
+    //       padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 30.0),
+    //       child: Container(
+    //         width: 250,
+    //         height: 45.0,
+    //         child: ElevatedButton(
+    //           style: ButtonStyle(
+    //             elevation: MaterialStateProperty.all(0),
+    //             backgroundColor:
+    //             MaterialStateProperty.all(
+    //                 AppColors.primary),
+    //             shape: MaterialStateProperty.all(
+    //               RoundedRectangleBorder(
+    //                 side: BorderSide(
+    //                     color: AppColors.primary),
+    //                 borderRadius:
+    //                 BorderRadius.circular(50),
+    //               ),
+    //             ),
+    //           ),
+    //           onPressed: () async {
+    //             //print(snap.data!);
+    //             AuthService _auth =
+    //             AuthService();
+    //             await _auth.signOut();
+    //             final SharedPreferences
+    //             prefs = await _prefs;
+    //             Future<String> _logout =
+    //             prefs
+    //                 .setString(
+    //                 'uid', '')
+    //                 .then(
+    //                     (bool success) {
+    //                   return 'Log out success';
+    //                 });
+    //             print('Log out');
+    //             GoRouter.of(context).pushNamed('home');
+    //           },
+    //           child: Padding(
+    //             padding: const EdgeInsets.symmetric(
+    //                 horizontal: 10.0),
+    //             child: Text(
+    //               'LOG OUT',
+    //               style: TextStyle(
+    //                 fontSize: 26,
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
+  }
+}
+
+
+
+
 
 class MyJobApplications extends StatefulWidget {
   const MyJobApplications({Key? key}) : super(key: key);
@@ -475,6 +750,244 @@ class _MyJobApplicationsState extends State<MyJobApplications> {
   }
 }
 
+
+
+class MyJobApplicationsShort extends StatefulWidget {
+  const MyJobApplicationsShort({Key? key}) : super(key: key);
+
+  @override
+  State<MyJobApplicationsShort> createState() => _MyJobApplicationsShortState();
+}
+
+class _MyJobApplicationsShortState extends State<MyJobApplicationsShort> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+  late bool _isExpanded = false; // Track expansion state
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
+  Stream<List<JobModel>> _getjobAppStream(Future<String> uidFuture) async* {
+    String uid = await uidFuture;
+    Stream<QuerySnapshot> applicationsSnapshot = FirebaseFirestore.instance
+        .collection('applications')
+        .where('uid', isEqualTo: uid)
+        .snapshots();
+
+    await for (QuerySnapshot snapshot in applicationsSnapshot) {
+      List<JobModel> jobs = [];
+      for (DocumentSnapshot applicationSnapshot in snapshot.docs) {
+        String? jobId =
+        (applicationSnapshot.data() as Map<String, dynamic>)['jobId'];
+        print(jobId);
+
+        QuerySnapshot jobSnapshot = await FirebaseFirestore.instance
+            .collection('jobs')
+            .where('jobId', isEqualTo: jobId)
+            .get();
+
+        if (jobSnapshot.docs[0].exists) {
+          JobModel job = JobModel.fromSnapshot(jobSnapshot.docs[0]);
+          print('printing jobid');
+          print(job.jobId);
+          jobs.add(job);
+        } else {
+          print('job snapshot doesnt exist');
+        }
+      }
+
+      yield jobs;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 100 / 2.0),
+      child: Container(
+        height: _isExpanded ? 500.0 : 80.0, // Set initial and expanded height
+        width: 360.0,
+        child: Card(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded; // Toggle expansion state
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'My Job Applications',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 22,
+                          ),
+                        ),
+                        Icon(
+                          _isExpanded ? Icons.expand_less : Icons.expand_more,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  height: _isExpanded ? 380.0 : 0.0, // Set expanded height
+                  child: _isExpanded
+                      ? FutureBuilder<String>(
+                    future: uid,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<String> snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Container();
+                        default:
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return snapshot.data != ''
+                                ? StreamBuilder<List<JobModel>>(
+                                stream: _getjobAppStream(uid),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<JobModel>> snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+
+                                  List<JobModel> jobs = snapshot.data ?? [];
+
+                                  if (jobs.isEmpty) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                            children: [
+                                              Text(
+                                                'You haven\'t applied for any jobs yet :(',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey.shade700
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              ElevatedButton(
+                                                style: ButtonStyle(
+                                                  elevation: MaterialStateProperty.all(0),
+                                                  backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      AppColors.primary),
+                                                  shape: MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                          color: AppColors.primary),
+                                                      borderRadius: BorderRadius.circular(50),
+                                                    ),
+                                                  ),
+                                                ),
+                                                onPressed: (){
+                                                  GoRouter.of(context).pushNamed('jobs');
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                      horizontal: 10.0, vertical: 4),
+                                                  child: Text(
+                                                    'Apply',
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w700,
+                                                        fontSize: 18),
+                                                  ),
+                                                ),
+                                              ),
+                                            ]
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: jobs.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        JobModel job = jobs[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                          child: Card(
+                                            elevation: 2,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(5),
+// side: BorderSide(
+//   color: AppColors.primary,
+// ),
+                                            ),
+                                            child: ListTile(
+                                              title: Text(job.companyName),
+                                              subtitle: Text(
+                                                '${job.roleAvailable}: Applied',
+                                                style: TextStyle(
+                                                    color: AppColors.primary
+                                                ),
+                                              ),
+// Display other job details here
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                })
+                                : Text('No data');
+                          }
+                      }
+                    },
+                  )
+                      : null, // Don't render contents when not expanded
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 class MyScholarshipApplications extends StatefulWidget {
   const MyScholarshipApplications({Key? key}) : super(key: key);
 
@@ -697,6 +1210,247 @@ class _MyScholarshipApplicationsState extends State<MyScholarshipApplications> {
     );
   }
 }
+
+class MyScholarshipApplicationsShort extends StatefulWidget {
+  const MyScholarshipApplicationsShort({Key? key}) : super(key: key);
+
+  @override
+  State<MyScholarshipApplicationsShort> createState() => _MyScholarshipApplicationsShortState();
+}
+
+class _MyScholarshipApplicationsShortState extends State<MyScholarshipApplicationsShort> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> uid;
+  late bool _isExpanded = false; // Track expansion state
+
+  @override
+  void initState() {
+    super.initState();
+    uid = _prefs.then<String>((SharedPreferences prefs) {
+      return Future.value(
+          prefs.getString('uid') != null ? prefs.getString('uid') : '');
+    });
+  }
+
+  Stream<List<ScholarshipModel>> _getScholarshipAppStream(
+      Future<String> uidFuture) async* {
+    String uid = await uidFuture;
+    Stream<QuerySnapshot> scholarAppsSnapshot = FirebaseFirestore.instance
+        .collection('scholarshipapply')
+        .where('uid', isEqualTo: uid)
+        .snapshots();
+
+    await for (QuerySnapshot snapshot in scholarAppsSnapshot) {
+      List<ScholarshipModel> scholarships = [];
+      for (DocumentSnapshot scholarAppsSnapshot in snapshot.docs) {
+        String? sid =
+        (scholarAppsSnapshot.data() as Map<String, dynamic>)['sid'];
+        print(sid);
+
+        QuerySnapshot scholarshipSnapshot = await FirebaseFirestore.instance
+            .collection('scholarships')
+            .where('sid', isEqualTo: sid)
+            .get();
+
+        if (scholarshipSnapshot.docs[0].exists) {
+          ScholarshipModel scholarship =
+          ScholarshipModel.fromSnapshot(scholarshipSnapshot.docs[0]);
+          print('printing sid');
+          print(scholarship.sid);
+          scholarships.add(scholarship);
+        } else {
+          print('scholarship snapshot doesn\'t exist');
+        }
+      }
+
+      yield scholarships;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 100 / 2.0),
+      child: Container(
+        height: _isExpanded ? 500.0 : 80.0, // Set initial and expanded height
+        width: 360.0,
+        child: Card(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded; // Toggle expansion state
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        border: Border.all(
+                          color: AppColors.primary,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(15))
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'My Scholarship Applications',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 22,
+                          ),
+                        ),
+                        Icon(
+                          _isExpanded ? Icons.expand_less : Icons.expand_more,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  height: _isExpanded ? 380.0 : 0.0, // Set expanded height
+                  child: _isExpanded
+                      ? FutureBuilder<String>(
+                    future: uid,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<String> snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Container();
+                        default:
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return snapshot.data != ''
+                                ? StreamBuilder<List<ScholarshipModel>>(
+                                stream: _getScholarshipAppStream(uid),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<ScholarshipModel>>
+                                    snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+
+                                  List<ScholarshipModel> scholarships =
+                                      snapshot.data ?? [];
+
+                                  if (scholarships.isEmpty) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                            children: [
+                                              Text(
+                                                'You haven\'t applied to any scholarships yet :(',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey.shade700
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              ElevatedButton(
+                                                style: ButtonStyle(
+                                                  elevation: MaterialStateProperty.all(0),
+                                                  backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      AppColors.primary),
+                                                  shape: MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                          color: AppColors.primary),
+                                                      borderRadius: BorderRadius.circular(50),
+                                                    ),
+                                                  ),
+                                                ),
+                                                onPressed: (){
+                                                  GoRouter.of(context).pushNamed('scholarships');
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                      horizontal: 10.0, vertical: 4),
+                                                  child: Text(
+                                                    'Apply',
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w700,
+                                                        fontSize: 18),
+                                                  ),
+                                                ),
+                                              ),
+                                            ]
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: scholarships.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      ScholarshipModel scholarship =
+                                      scholarships[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                        child: Card(
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5),
+                                            // side: BorderSide(
+                                            //   color: AppColors.primary,
+                                            // ),
+                                          ),
+                                          child: ListTile(
+                                            title: Text(scholarship.name),
+                                            subtitle: Text(
+                                              'Applied',
+                                              style: TextStyle(
+                                                  color: AppColors.primary
+                                              ),
+                                            ),
+                                            // Display other job details here
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                })
+                                : Text('No data');
+                          }
+                      }
+                    },
+                  )
+                      : null, // Don't render contents when not expanded
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 // class GoogleLoginButton extends StatefulWidget {
 //   const GoogleLoginButton({Key? key}) : super(key: key);

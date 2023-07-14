@@ -1061,7 +1061,7 @@ class _MyScholarshipApplicationsState extends State<MyScholarshipApplications> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              //crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),

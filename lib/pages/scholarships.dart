@@ -77,6 +77,10 @@ class _ScholarshipsPageState extends State<ScholarshipsPage> {
                   if (!snapshot.hasData) {
                     return Text("There are no scholarships available");
                   }
+                  else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
                   return Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 20.0, // Adjust spacing between cards as needed

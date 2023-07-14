@@ -80,7 +80,15 @@ class _DesktopNavBarState extends State<DesktopNavBar> {
                   default:
                     if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
-                    } else {
+
+                    }
+
+                    else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+
+                    else {
                       return snapshot.data != ''
                           ? StreamBuilder(
                           stream: FirebaseFirestore.instance
@@ -92,7 +100,10 @@ class _DesktopNavBarState extends State<DesktopNavBar> {
                             if (!snap.hasData) {
                               return Container();
                             }
-
+                            else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
                             return Container(
                               child: Row(
                                 crossAxisAlignment:

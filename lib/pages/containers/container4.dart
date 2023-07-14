@@ -273,6 +273,10 @@ class _MobileContainer4State extends State<MobileContainer4> {
                 if (!snapshot.hasData) {
                   return Text("There are no job listings available");
                 }
+                else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
                 List<DocumentSnapshot> jobListings = snapshot.data!.docs;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,

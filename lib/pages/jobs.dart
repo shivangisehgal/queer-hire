@@ -73,6 +73,10 @@ class _JobsPageState extends State<JobsPage> {
                   if (!snapshot.hasData) {
                     return Text("There are no job listings available");
                   }
+                  else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
                   return Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 20.0, // Adjust spacing between cards as needed

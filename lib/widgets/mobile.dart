@@ -98,7 +98,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 default:
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
-                  } else {
+                  }
+                  else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  else {
                     return snapshot.data != ''
                         ? StreamBuilder(
                             stream: FirebaseFirestore.instance

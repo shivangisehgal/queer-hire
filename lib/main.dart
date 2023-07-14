@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import '/models/user.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -26,35 +27,40 @@ void main() async {
           projectId: "queerhire",
           storageBucket: "queerhire.appspot.com"
       ));
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final MaterialColor purple = MaterialColor(
+    0xFFB37DC1,
+    <int, Color>{
+      50: Color(0xFFB37DC1),
+      100: Color(0xFFB37DC1),
+      200: Color(0xFFB37DC1),
+      300: Color(0xFFB37DC1),
+      400: Color(0xFFB37DC1),
+      500: Color(0xFFB37DC1),
+      600: Color(0xFFB37DC1),
+      700: Color(0xFFB37DC1),
+      800: Color(0xFFB37DC1),
+      900: Color(0xFFB37DC1),
+    },
+  );
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  // void initState() {
-  //   getUserInfo();
-  //   super.initState();
-  // }
-  //
-  // Future getUserInfo() async {
-  //   await getUser();
-  //   setState(() {});
-  //   print(uid);
-  //   print(isRecruiter);
-  // }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'QueerHire',
       theme: ThemeData(
+        primarySwatch: widget.purple,
         fontFamily: 'HindSiliguri',
         brightness: Brightness.light,
         primaryColor: AppColors.primary,

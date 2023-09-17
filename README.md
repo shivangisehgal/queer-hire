@@ -2,6 +2,9 @@
 
 QueerHire is a responsive web application developed using Flutter, with a mission to provide an inclusive hiring and opportunity platform specifically designed for the LGBTQ+ community. As an ally, I understand the unique challenges faced by LGBTQ+ individuals in building their careers, and I aim to make this journey more accessible and equitable.
 
+
+Check it out 👉 [QueerHire is Live!](https://queerhire.web.app/#/)
+
 ## Table of Contents 
 
 

@@ -17,14 +17,14 @@ Check it out 👉 [QueerHire is Live!](https://queerhire.web.app/#/)
 
 QueerHire offers the following features:
 
-- **Login Page** 🧃: A user-friendly login page for secure account access.
+- **Login Page** 🧃: A user-friendly login page.
 - **Signup Page** 🧃: Easy account creation through a simple signup form.
 - **Forgot Password Support** 🧃: Convenient password reset feature.
 - **Home Page** 🧃: An introductory page explaining the platform's mission and objectives.
 - **Jobs Page** 🧃: Browse and apply for LGBTQ+ inclusive job opportunities.
 - **Scholarships Page** 🧃: Discover and apply for scholarships supporting LGBTQ+ individuals in education.
 - **Job Application Form** 🧃: Simplified job application with auto-populated user data, with a feature to upload your resume.
-- **Scholarship Application Form** 🧃: Streamlined scholarship application with auto-populated user data and cover letter upload.
+- **Scholarship Application Form** 🧃: Simplified scholarship application with auto-populated user data and cover letter upload.
 - **Trainings Page** 🧃: Sign up for future courses and training programs.
 - **Guidance Page** 🧃: Seek career counseling and guidance.
 - **Profile Page** 🧃: To view the status of your applications.
@@ -80,6 +80,6 @@ Society often ignores or discriminates against LGBTQ+ people. It is time to addr
 
 QueerHire utilizes the following technologies:
 
-👩‍💻 **Flutter**: The web application is developed using Flutter to ensure a responsive and user-friendly interface.
+👩‍💻 **Flutter**: The web application is developed using Flutter.
 
-👩‍💻 **Firebase**: Firebase serves as the backend and deployment platform, providing authentication, data storage, and hosting capabilities for the web application.
+👩‍💻 **Firebase**: Firebase serves as the backend and deployment platform, providing authentication, data storage, and hosting for the web application.

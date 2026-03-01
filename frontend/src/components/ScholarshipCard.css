@@ -1,0 +1,63 @@
+.scholarship-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  background: var(--color-surface-solid);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.scholarship-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.scholarship-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.scholarship-icon {
+  font-size: 1.5rem;
+}
+
+.scholarship-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.scholarship-description {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px 0;
+  flex: 1;
+}
+
+.scholarship-eligibility {
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  margin-bottom: 24px;
+}
+
+.scholarship-eligibility-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.scholarship-eligibility-value {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 8px 0 0 0;
+}
+
+.scholarship-apply-btn {
+  width: 100%;
+  margin-top: auto;
+}

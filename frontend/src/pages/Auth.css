@@ -1,0 +1,140 @@
+.auth-page {
+  min-height: calc(100vh - 73px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-primary-soft) 100%);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 900px;
+}
+
+.auth-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--color-surface-solid);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.auth-form-panel {
+  padding: 48px 40px;
+}
+
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin: 0 0 8px 0;
+}
+
+.auth-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 32px 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-reset-text {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 8px 0;
+}
+
+.auth-link {
+  align-self: flex-start;
+  font-size: 0.9375rem;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-error {
+  font-size: 0.875rem;
+  color: #c53030;
+  margin: 0;
+}
+
+.auth-form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.auth-submit {
+  width: 100%;
+  padding: 14px;
+}
+
+.auth-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.auth-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+.auth-side-panel {
+  padding: 48px 40px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #8b6ec9 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+
+.auth-side-panel h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.auth-side-panel p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.auth-side-panel .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.auth-side-link {
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .auth-card {
+    grid-template-columns: 1fr;
+  }
+  .auth-side-panel {
+    padding: 32px 40px;
+    order: -1;
+  }
+  .auth-form-panel {
+    padding: 32px 24px;
+  }
+}
